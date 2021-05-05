@@ -1,13 +1,21 @@
+from math import sqrt
+
 
 class Wall:
     def __init__(self, xOrigin, yOrigin, xDirection, yDirection, material):
-        self.n=[xDirection,yDirection]
+        self.length = sqrt(xDirection^2+yDirection^2)
+        self.uX = xDirection/self.length                    #vecteur U // au mur
+        self.uY = yDirection
+        self.nX = yDirection                                #vecteur N normal au mur
+        self.nY = -xDirection
+
         self.origin = [xOrigin,yOrigin]
 
         self.material = material
         self.relativePermitivity = 0
         self.condctivity = 0
-
+        self.xDirection = xDirection                        #pour l'affichage
+        self.yDirection = yDirection
     def getOriginX(self):
         return self.origin[0]
 
@@ -15,10 +23,10 @@ class Wall:
         return self.origin[1]
 
     def getNx(self):
-        return self.n[0]
+        return self.nX
 
     def getNy(self):
-        return self.n[1]
+        return self.nY
 
     def setProperty(self, material):
         if material == "brick":

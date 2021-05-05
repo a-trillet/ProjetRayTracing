@@ -1,2 +1,1 @@
-MAP1 = 1
-MAP2 = 2
+MAPstyle = 1 #1(corner) or 2(MET)
