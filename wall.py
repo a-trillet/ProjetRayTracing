@@ -16,7 +16,7 @@ class wall:
     def getNy(self):
         return self.n[1]
 
-    def set(self, material):
+    def setProperty(self, material):
         if material == "brick":
             self.condctivity = 0.02
             self.relativePermitivity = 4.6
