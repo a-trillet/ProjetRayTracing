@@ -9,6 +9,4 @@ def getRayImages(originX, originY, walls):
             ray = Ray(originX, originY)
             ray.imagePoints.append()
             rays.append(ray)
-
-
     return rays
