@@ -1,5 +1,5 @@
 class Ray:
-    def __init__(self,originX,originY, receiverX, receiverY):
+    def __init__(self, originX, originY, receiverX, receiverY):
         self.originX = originX
         self.originY = originY
         self.receiverX = receiverX

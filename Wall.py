@@ -12,13 +12,14 @@ class Wall:
 
         self.origin = [xOrigin, yOrigin]
 
-        self.material = material
         self.mat = -1
         self.relativePermitivity = 0
         self.condctivity = 0
         self.thickness = 0.5                                #en mètre
         self.xDirection = xDirection                        #pour l'affichage
         self.yDirection = yDirection
+
+        self.setProperty(material)
 
 
     def getOriginX(self):
