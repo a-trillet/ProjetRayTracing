@@ -9,7 +9,7 @@ def getRayImages(originX, originY,walls, oldRay):
 
     rays = [oldRay]
     e = len(oldRay.imagePoints)
-    if e < 3:
+    if e < 2:
         for wall in walls:
             try:
                 if  wall != oldRay.walls[-1]:

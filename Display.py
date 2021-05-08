@@ -4,7 +4,7 @@ import random
 import Map
 
 
-def display():
+def display(map_style, rays):
     """
     plt.plot(x, y, label="quadratique")
     plt.plot(x, x ** 3, label="cubique")
@@ -23,7 +23,7 @@ def display():
     plt.pcolor(X, Y, Z, cmap=plt.cm.turbo)
     plt.colorbar()
 
-    for i in Map.getWalls(2):                               # affichage des murs
+    for i in Map.getWalls(map_style):                               # affichage des murs
         x1 = [i.getOriginX(), i.getOriginX() + i.xDirection]
         y1 = [i.getOriginY(), i.getOriginY() + i.yDirection]
         if i.mat == 0:
@@ -32,6 +32,16 @@ def display():
             plt.plot(x1, y1, c="gray", lw=3)
 
     plt.scatter(100, 45, c="black")                         #point émetteur initial
+
+
+    for ray in rays:
+        try:
+            x1 = [ray.imagePoints[-1][0], ray.receiverX]
+            y1 = [ray.imagePoints[-1][1], ray.receiverY]
+        except:
+            x1 = [ray.originX, ray.receiverX]
+            y1 = [ray.originY, ray.receiverY]
+        plt.plot(x1, y1, c='black')
 
     plt.title("figure 1")
     plt.xlabel("axe x")
