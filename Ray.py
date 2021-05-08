@@ -1,7 +1,9 @@
 class Ray:
-    def __init__(self,originX,originY):
+    def __init__(self,originX,originY, receiverX, receiverY):
         self.originX = originX
         self.originY = originY
-        self.receiver = [0, 0]
+        self.receiverX = receiverX
+        self.receiverY = receiverY
         self.imagePoints = []
+        self.walls = []
         self.reflexionPoints = []

@@ -6,9 +6,9 @@ class Wall:
     def __init__(self, xOrigin, yOrigin, xDirection, yDirection, material):
         self.length = math.sqrt(xDirection ** 2 + yDirection ** 2)
         self.uX = xDirection/self.length                    #vecteur U // au mur
-        self.uY = yDirection
-        self.nX = yDirection                                #vecteur N normal au mur
-        self.nY = -xDirection
+        self.uY = yDirection/self.length
+        self.nX = yDirection/self.length                        #vecteur N normal au mur
+        self.nY = -xDirection/self.length
 
         self.origin = [xOrigin, yOrigin]
 

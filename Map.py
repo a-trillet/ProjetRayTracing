@@ -5,6 +5,7 @@ def getWalls(mapType):
     walls = []
     if mapType == 1:
         walls.append(Wall(15, 0, 0, 10, "concrete"))
+        #walls.append(Wall(-10, 0, 0, 10, "concrete"))
         walls.append(Wall(0, 10, 10, 0, "brick"))
     """ 
         shéma du système de deux murs 
