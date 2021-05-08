@@ -20,7 +20,7 @@ def display():
 
     # Z = np.random.randint(40, 320, (b+10, a+10))  # il y a plus q'a mettre un tableau de données pour z et c'est plié
     Z = X * np.cos(Y / 5)
-    plt.pcolor(X, Y, Z, cmap=plt.cm.gnuplot)
+    plt.pcolor(X, Y, Z, cmap=plt.cm.turbo)
     plt.colorbar()
 
     for i in Map.getWalls(2):                               # affichage des murs
