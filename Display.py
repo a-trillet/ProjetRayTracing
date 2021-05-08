@@ -41,7 +41,12 @@ def display(map_style, rays):
         except:
             x1 = [ray.originX, ray.receiverX]
             y1 = [ray.originY, ray.receiverY]
-        plt.plot(x1, y1, c='black')
+        try:
+            plt.scatter(ray.Ppoints[0], ray.Ppoints[1], c='blue')
+        except:
+            fdss=0
+            #print("no no no")
+        #plt.plot(x1, y1, c='black')
 
     plt.title("figure 1")
     plt.xlabel("axe x")
