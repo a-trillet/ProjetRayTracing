@@ -51,6 +51,6 @@ dp.display(MAPstyle, rays)
 
 
 
-if __name__ == '__main__':
+"""if __name__ == '__main__':
     # freeze_support() here if program needs to be frozen
-    main()  # execute this only when run directly, not when imported!
+    main()  # execute this only when run directly, not when imported!"""

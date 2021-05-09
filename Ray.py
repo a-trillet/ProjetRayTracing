@@ -32,8 +32,8 @@ class Ray:
                     t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
 
                     PSsn = s[0] * n[0] + s[1] * n[1]
-                    PSRXn = RX[0] * n[0] + RX[1] * n[1]
-                    if np.sign(PSsn) == np.sign(PSRXn) or True:
+                    PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
+                    if np.sign(PSsn) == np.sign(PSRXn):
                         if 0 <= t <= self.walls[i].length:
                             P = [x0[0] + t * u[0], x0[1] + t * u[1]]
                             self.Ppoints.extend(P)
