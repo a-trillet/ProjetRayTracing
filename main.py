@@ -4,10 +4,14 @@ from ImageMethod import *
 import Display as dp
 import multiprocessing as mp
 
-MAPstyle = 1  # 1(corner) or 2(MET)
+MAPstyle = 2  # 1(corner) or 2(MET)
 walls = Map.getWalls(MAPstyle)
-ray = Ray(0, 0, 0, 5)
-rays = getRayImages(0, 0, walls, ray)
+if MAPstyle == 1:
+    ray = Ray(0, 0, 0, 5)
+    rays = getRayImages(0, 0, walls, ray)
+else:
+    ray = Ray(100, 45, 100, 40)
+    rays = getRayImages(100, 45, walls, ray)
 print(len(rays))
 for i in rays:
     i.find_Points()

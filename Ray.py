@@ -1,6 +1,7 @@
 from Wall import *
 import numpy as np
 
+
 class Ray:
     def __init__(self, originX, originY, receiverX, receiverY):
         self.originX = originX
@@ -11,48 +12,35 @@ class Ray:
         self.walls = []
         self.reflexionPoints = []
         self.Ppoints = []
+        self.Ppoints2 = []
+        self.Ppoints3 = []
 
     def find_Points(self):
-        for i in range(len(self.imagePoints)):
-            try:
-                if i+1 < len(self.imagePoints):
-                    dx = self.imagePoints[i + 1][0] - self.imagePoints[i][0]
-                    dy = self.imagePoints[i + 1][1] - self.imagePoints[i][1]
-                    PsSN = (self.imagePoints[i][0] - self.walls[i].getOriginX()) * self.walls[i].nX + (
-                                self.imagePoints[i][1] - self.walls[i].getOriginX()) * self.walls[i].nY
 
-                    PsRN = (self.imagePoints[i + 1][0] - self.walls[i].getOriginX()) * self.walls[i].nX + (
-                                self.imagePoints[i + 1][1] - self.walls[i].getOriginY()) * self.walls[i].nY
+        for i in range(1):
+            if i == 0:
+                try:
+                    RX = [self.receiverX, self.receiverY]
+                    TXp = [self.imagePoints[i][0], self.imagePoints[i][1]]  # point TX'
+                    TX = [self.originX, self.originY]
+                    d = [RX[0] - TXp[0], RX[1] - TXp[1]]
+                    x0 = [self.walls[i].origin[0], self.walls[i].origin[1]]
+                    s = [TX[0] - x0[0], TX[1] - x0[1]]
+                    n = [self.walls[i].nX, self.walls[i].nY]
+                    u = [self.walls[i].uX, self.walls[i].uY]
 
-                    if np.sign(PsSN) == np.sign(PsRN):
-                        w = dx * self.walls[i].nX + dy * self.walls[i].nY
-                        if w != 0:
-                            t = (dx * (self.walls[i].getOriginY() - self.imagePoints[i][1]) - dy * (
-                                    self.walls[i].getOriginX() - self.imagePoints[i][0])) / w
-                            if 0 <= t <= self.walls[i].length:
-                                P = [self.walls[i].getOriginX() + t * self.walls[i].uX, self.walls[i].getOriginY() + t * self.walls[i].uY]
-                                self.Ppoints.extend(P)
-                                print(P)
-                    else:
-                        print("wooooow truc de ouf")
-                elif i+1 == len(self.imagePoints):
-                    dx = self.receiverX - self.imagePoints[i][0]
-                    dy = self.receiverY - self.imagePoints[i][1]
-                    PsSN = (self.originX - self.walls[i].getOriginX()) * self.walls[i].nX + (
-                                self.originY - self.walls[i].getOriginY()) * self.walls[i].nY
-                    PsRN = (self.receiverX - self.walls[i].getOriginX()) * self.walls[i].nX + (
-                                self.receiverY - self.walls[i].getOriginY()) * self.walls[i].nY
-                    if np.sign(PsSN) == np.sign(PsRN):
-                        w = dx * self.walls[i].nX + dy * self.walls[i].nY
-                        if w != 0:
-                            t = (dx * (self.walls[i].getOriginY() - self.imagePoints[i][1]) - dy * (
-                                    self.walls[i].getOriginX() - self.imagePoints[i][0])) / w
-                            if 0 <= t <= self.walls[i].length:
-                                P = [self.walls[i].getOriginX() + t * self.walls[i].uX,
-                                     self.walls[i].getOriginY() + t * self.walls[i].uY]
-                                self.Ppoints.extend(P)
-                                print(P)
-                    else:
-                        print("wooooow truc de ouf")
-            except:
-                print("nope")
+                    t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
+
+                    PSsn = s[0] * n[0] + s[1] * n[1]
+                    PSRXn = RX[0] * n[0] + RX[1] * n[1]
+                    if np.sign(PSsn) == np.sign(PSRXn) or True:
+                        if 0 <= t <= self.walls[i].length:
+                            P = [x0[0] + t * u[0], x0[1] + t * u[1]]
+                            self.Ppoints.extend(P)
+                except:
+                    print("pas de point image")
+            else:
+                RX = [self.imagePoints[i + 1][0], self.imagePoints[i + 1][1]]
+                TXp = [self.imagePoints[i][0], self.imagePoints[i][1]]  # point TX'
+                TX = 0
+        print(self.Ppoints)

@@ -32,8 +32,8 @@ def display(map_style, rays):
             plt.plot(x1, y1, c="gray", lw=3)
 
     plt.scatter(100, 45, c="black")                         #point émetteur initial
-
-
+    plt.scatter(100, 40, c="red")
+    nbp = 0
     for ray in rays:
         try:
             x1 = [ray.imagePoints[-1][0], ray.receiverX]
@@ -43,6 +43,7 @@ def display(map_style, rays):
             y1 = [ray.originY, ray.receiverY]
         try:
             plt.scatter(ray.Ppoints[0], ray.Ppoints[1], c='blue')
+            nbp += 1
         except:
             fdss=0
             #print("no no no")
@@ -51,5 +52,5 @@ def display(map_style, rays):
     plt.title("figure 1")
     plt.xlabel("axe x")
     plt.ylabel("axe y")
-
+    print("nbp = ", nbp)
     plt.show()
