@@ -53,10 +53,10 @@ he = -lam/math.pi
 factor = he**2/8/Ra
 Gtx = 1.6977
 Ptx = 0.1   # [W]
-for i in rays:
+"""for i in rays:
     if i.find_Points():
         power += i.getPower
-power *= factor * 60*Gtx*Ptx
+power *= factor * 60*Gtx*Ptx"""
 dp.display(MAPstyle, rays)
 
     # print("Number of processors: ", mp.cpu_count())
