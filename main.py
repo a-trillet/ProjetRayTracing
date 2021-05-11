@@ -36,7 +36,7 @@ def main():
     print("Execution time: ", (fin_time - init_time))
 
 
-MAPstyle = 1  # 1(corner) or 2(MET)
+MAPstyle = 2  # 1(corner) or 2(MET)
 walls = Map.getWalls(MAPstyle)
 if MAPstyle == 1:
     ray = Ray(0, 0, 0, 5)
@@ -54,10 +54,10 @@ he = -lam/math.pi
 factor = he**2/8/Ra
 Gtx = 1.6977
 Ptx = 0.1   # [W]
-for i in rays:
+"""for i in rays:
     if i.find_Points():
         power += i.getPower
-power *= factor * 60*Gtx*Ptx
+power *= factor * 60*Gtx*Ptx"""
 dp.display(MAPstyle, rays)
 
     # print("Number of processors: ", mp.cpu_count())

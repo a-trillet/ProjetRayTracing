@@ -35,9 +35,8 @@ def display(map_style, rays):
     plt.scatter(100, 40, c="red")
     plt.scatter(0, 0, c="black")
     plt.scatter(0, 5, c="black")
-    nbp = 0
     for ray in rays:
-        try:
+        """try:
             x1 = [ray.Ppoints[0], ray.receiverX]
             y1 = [ray.Ppoints[1], ray.receiverY]
             x2 = [ray.originX, ray.Ppoints[0]]
@@ -46,21 +45,23 @@ def display(map_style, rays):
             x1 = [ray.originX, ray.receiverX]
             y1 = [ray.originY, ray.receiverY]
             x2 = [0, 0]
-            y2 = [0, 0]
-        try:
-            plt.scatter(ray.Ppoints[0], ray.Ppoints[1], c='blue')
-            plt.scatter(ray.Ppoints2[0], ray.Ppoints2[1], c='r')
-            plt.scatter(ray.Ppoints3[0], ray.Ppoints3[1], c='g')
-            nbp += 1
-            # plt.plot(x1, y1, ls="--")
-            # plt.plot(x2, y2, ls="--")
-        except:
-            fdss = 0
-            # print("no no no")
+            y2 = [0, 0]"""
+        if ray.Ppoints:
+            for p in range(len(ray.Ppoints)):
+                plt.scatter(ray.Ppoints[p][0], ray.Ppoints[p][1], c='blue')
+        if ray.Ppoints6:
+            plt.scatter(ray.Ppoints6[0][0], ray.Ppoints6[0][1], c='red')
+        if ray.Ppoints5:
+            plt.scatter(ray.Ppoints5[0][0], ray.Ppoints5[0][1], c='green')
+        if ray.Ppoints4:
+            plt.scatter(ray.Ppoints4[0][0], ray.Ppoints4[0][1], c='yellow')
 
+
+
+        # plt.plot(x1, y1, ls="--")
+        # plt.plot(x2, y2, ls="--")
 
     plt.title("figure 1")
     plt.xlabel("axe x")
     plt.ylabel("axe y")
-    print("nbp = ", nbp)
     plt.show()
