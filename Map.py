@@ -1,6 +1,32 @@
 from Wall import Wall
 
 
+def sortWallsH(wall):
+    return wall.origin[1]
+
+
+def getWallsH(walls):
+    wallsH = []
+    for wall in walls:
+        if wall.yDirection == 0:
+            wallsH.append(wall)
+    walls.sort(key=sortWallsH)
+    return wallsH
+
+
+def sortWallsV(wall):
+    return wall.origin[1]
+
+
+def getWallsV(walls):
+    wallsV = []
+    for wall in walls:
+        if wall.xDirection == 0:
+            wallsV.append(wall)
+    walls.sort(key=sortWallsV)
+    return wallsV
+
+
 def getWalls(mapType):
     walls = []
     if mapType == 1:

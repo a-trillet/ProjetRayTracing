@@ -20,7 +20,6 @@ def nb_of_rays(i, j, walls):
     rays = getRayImages(100, 65, walls, ray)
     return i, j, len(rays)
 
-
 def main():
     init_time = datetime.now()
     pool = mp.Pool(12)

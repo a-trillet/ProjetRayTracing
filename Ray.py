@@ -76,9 +76,9 @@ class Ray:
     alphaMbrick = omega * math.sqrt(4.6 * c / 2 * (1 + math.sqrt(1 + (0.02 / omega / 4.6 / 8.854e-12) ** 2) -1))
     betaMconcrete = omega * math.sqrt(5 * c /2*(1+math.sqrt(1+(0.014/omega/5/8.854e-12)**2)+1))
     betaMbrick = omega * math.sqrt(4.6 * c /2*(1+math.sqrt(1+(0.02/omega/4.6/8.854e-12)**2)+1))
-    Z1 =  mu0 * c
-    Z2concrete =   cmath.sqrt(mu0/ epsCconcrete)
-    Z2brick =   cmath.sqrt(mu0/ epsCbrick)
+    Z1 = mu0 * c
+    Z2concrete = cmath.sqrt(mu0 / epsCconcrete)
+    Z2brick = cmath.sqrt(mu0 / epsCbrick)
 
     def getPower(self):   # en fait pas vraiment power mais |E|**2
         coefficients = 1
@@ -113,3 +113,56 @@ class Ray:
         power = coefficients**2 / dn_carre
 
         return power
+
+    def getTcoef(self, wallsH, wallsV):
+        Tcoef_carre = 1
+        for i in range(len(self.Ppoints)+1):
+            if i == 0:
+                Px1 = self.originX
+                Py1 = self.originY
+                Px2 = self.Ppoints[0][0]
+                Py2 = self.Ppoints[0][1]
+            elif i == len(self.Ppoints):
+                Px1 = self.Ppoints[i-1][0]
+                Py1 = self.Ppoints[i-1][1]
+                Px2 = self.receiverX
+                Py2 = self.receiverY
+            else:
+                Px1 = self.Ppoints[i - 1][0]
+                Py1 = self.Ppoints[i - 1][1]
+                Px2 = self.Ppoints[i][0]
+                Py2 = self.Ppoints[i][1]
+
+            # Walls H
+            found = 0
+            dx = Px2 - Px1
+            dy = Py2 - Py1
+            d = math.sqrt(dx ** 2 + dy ** 2)  # NOTE :valeurs présentes dans GetPower()
+            for wall in wallsH:          # n= (0,-1)
+                if Py1 <= wall.origin[1] <= Py2 or Py1 >= wall.origin[1] >= Py2:
+                    found = 1
+                    cosOi = -dy                                     # NOTE : valeurs plus ou moins calculées dans # getPower
+                    sinOi = dx                                      #faute expres pour simplifier, cos, sin  corrigés par la suite
+                    proj = (wall.origin[1]-Py2)*sinOi/cosOi
+                    if wall.origin[0] <= Px2-proj <= wall.origin[0]+wall.length:
+                        cosOi /= d                                   #correction des cos et sin pour calculer T
+                        sinOi /= d
+                        Tcoef_carre *= 1           # ATTENTION changer 1 par la formule
+                elif found == 1:
+                    break
+            # Walls V
+            found = 0
+            for wall in wallsV:  # n= (1,0)
+                if Px1 <= wall.origin[0] <= Px2 or Px1 >= wall.origin[0] >= Px2:
+                    found = 1
+                    cosOi = dx                      # NOTE : valeurs plus ou moins calculées dans getPower
+                    sinOi = dy                              # faute exprès
+                    proj = (Px2 - wall.origin[0]) * sinOi / cosOi
+                    if wall.origin[0] <= Px2 - proj <= wall.origin[0] + wall.length:
+                        cosOi /= d               # correction des cos et sin pour calculer T
+                        sinOi /= d
+                        Tcoef_carre *= 1            # ATTENTION changer 1 par la formule
+                elif found == 1:
+                    break
+
+        return Tcoef_carre   # NOTE: carré ou pas à voir

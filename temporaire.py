@@ -1,10 +1,9 @@
-import Ray
-import math
-#constant variables :
-Z0 = 376.730313
-Ra = 73
-c = 299792458
-lam = c/(27 * 10**9)
-he = -lam/math.pi
-factor = he**2/8/Ra
-print(factor)
+import Map
+from datetime import datetime
+
+init_time = datetime.now()
+walls = Map.getWalls(2)
+wallsH = Map.getWallsH(walls)
+wallsV = Map.getWallsV(walls)
+fin_time = datetime.now()
+print("Execution time: ", (fin_time - init_time))
