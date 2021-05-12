@@ -24,7 +24,6 @@ class Ray:
         self.Ppoints6 = []
 
     def find_Points(self):
-        res = False
         if self.walls:
             for i in range(len(self.walls)):
                 RX = [self.receiverX, self.receiverY]
@@ -44,104 +43,103 @@ class Ray:
                     if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i].length:
                         P1 = [x0[0] + t * u[0], x0[1] + t * u[1]]
                         self.Ppoints.append(P1)
-                        res = True
+                        return True
                     else:
                         return False
 
                 elif i == 1 and len(self.imagePoints) == 2:
-                    try:
-                        TXp = [self.imagePoints[i][0], self.imagePoints[i][1]]  # point TX'
-                        TX = [self.imagePoints[i - 1][0], self.imagePoints[i - 1][1]]
+                    RX = [self.receiverX, self.receiverY]
+                    TXp = [self.imagePoints[i][0], self.imagePoints[i][1]]  # point TX'
+                    TX = [self.imagePoints[i - 1][0], self.imagePoints[i - 1][1]]
+                    d = [RX[0] - TXp[0], RX[1] - TXp[1]]
+                    s = [TX[0] - x0[0], TX[1] - x0[1]]
+                    t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
+
+                    PSsn = s[0] * n[0] + s[1] * n[1]
+                    PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
+                    if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i].length:
+                        P3 = [x0[0] + t * u[0], x0[1] + t * u[1]]
+
+                        RX = P3
+                        TXp = [self.imagePoints[i - 1][0], self.imagePoints[i - 1][1]]  # point TX'
+                        TX = [self.originX, self.originY]
+                        x0 = [self.walls[i - 1].origin[0], self.walls[i - 1].origin[1]]
+                        n = [self.walls[i - 1].nX, self.walls[i - 1].nY]
+                        u = [self.walls[i - 1].uX, self.walls[i - 1].uY]
                         d = [RX[0] - TXp[0], RX[1] - TXp[1]]
                         s = [TX[0] - x0[0], TX[1] - x0[1]]
                         t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
 
                         PSsn = s[0] * n[0] + s[1] * n[1]
                         PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                        if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i].length:
-                            P3 = [x0[0] + t * u[0], x0[1] + t * u[1]]
+                        if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i - 1].length:
+                            P2 = [x0[0] + t * u[0], x0[1] + t * u[1]]
+                            self.Ppoints.append(P2)
+                            self.Ppoints.append(P3)
+                            return True
+                        else:
+                            return False
+                    else:
+                        return False
 
-                            RX = P3
-                            TXp = [self.imagePoints[i - 1][0], self.imagePoints[i - 1][1]]  # point TX'
+                elif i == 2 and len(self.imagePoints) == 3:
+                    RX = [self.receiverX, self.receiverY]
+                    TXp = [self.imagePoints[i][0], self.imagePoints[i][1]]  # point TX'
+                    TX = [self.imagePoints[i - 1][0], self.imagePoints[i - 1][1]]
+                    d = [RX[0] - TXp[0], RX[1] - TXp[1]]
+                    s = [TX[0] - x0[0], TX[1] - x0[1]]
+                    t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
+
+                    PSsn = s[0] * n[0] + s[1] * n[1]
+                    PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
+                    if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i].length:
+                        P6 = [x0[0] + t * u[0], x0[1] + t * u[1]]
+
+                        RX = P6
+                        TXp = [self.imagePoints[i - 1][0], self.imagePoints[i - 1][1]]  # point TX'
+                        TX = [self.imagePoints[i - 2][0], self.imagePoints[i - 2][1]]
+                        x0 = [self.walls[i - 1].origin[0], self.walls[i - 1].origin[1]]
+                        n = [self.walls[i - 1].nX, self.walls[i - 1].nY]
+                        u = [self.walls[i - 1].uX, self.walls[i - 1].uY]
+                        d = [RX[0] - TXp[0], RX[1] - TXp[1]]
+                        s = [TX[0] - x0[0], TX[1] - x0[1]]
+                        t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
+
+                        PSsn = s[0] * n[0] + s[1] * n[1]
+                        PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
+                        if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i - 1].length:
+                            P5 = [x0[0] + t * u[0], x0[1] + t * u[1]]
+
+                            RX = P5
+                            TXp = [self.imagePoints[i - 2][0], self.imagePoints[i - 2][1]]  # point TX'
                             TX = [self.originX, self.originY]
-                            x0 = [self.walls[i - 1].origin[0], self.walls[i - 1].origin[1]]
-                            n = [self.walls[i - 1].nX, self.walls[i - 1].nY]
-                            u = [self.walls[i - 1].uX, self.walls[i - 1].uY]
+                            x0 = [self.walls[i - 2].origin[0], self.walls[i - 2].origin[1]]
+                            n = [self.walls[i - 2].nX, self.walls[i - 2].nY]
+                            u = [self.walls[i - 2].uX, self.walls[i - 2].uY]
                             d = [RX[0] - TXp[0], RX[1] - TXp[1]]
                             s = [TX[0] - x0[0], TX[1] - x0[1]]
                             t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
 
                             PSsn = s[0] * n[0] + s[1] * n[1]
                             PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                            if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i - 1].length:
-                                P2 = [x0[0] + t * u[0], x0[1] + t * u[1]]
-                                self.Ppoints.append(P2)
-                                self.Ppoints.append(P3)
-                                res = True
+                            if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i - 2].length:
+                                P4 = [x0[0] + t * u[0], x0[1] + t * u[1]]
+                                self.Ppoints6.append(P6)
+                                self.Ppoints5.append(P5)
+                                self.Ppoints4.append(P4)
+                                """print("P4 : ", self.Ppoints4, "rayon : ", self)
+                                print("P5 : ", self.Ppoints5)
+                                print("P6 : ", self.Ppoints6)"""
+                                return True
                             else:
                                 return False
                         else:
                             return False
-                    except:
-                        egf = 56
-                elif i == 2:
-                    try:
-                        TXp = [self.imagePoints[i][0], self.imagePoints[i][1]]  # point TX'
-                        TX = [self.imagePoints[i - 2][0], self.imagePoints[i - 2][1]]
-                        d = [RX[0] - TXp[0], RX[1] - TXp[1]]
-                        s = [TX[0] - x0[0], TX[1] - x0[1]]
-                        t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
+                    else:
+                        return False
 
-                        PSsn = s[0] * n[0] + s[1] * n[1]
-                        PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                        if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i].length:
-                            P6 = [x0[0] + t * u[0], x0[1] + t * u[1]]
-
-                            RX = P6
-                            TXp = [self.imagePoints[i - 1][0], self.imagePoints[i - 1][1]]  # point TX'
-                            TX = [self.originX, self.originY]
-                            x0 = [self.walls[i - 1].origin[0], self.walls[i - 1].origin[1]]
-                            n = [self.walls[i - 1].nX, self.walls[i - 1].nY]
-                            u = [self.walls[i - 1].uX, self.walls[i - 1].uY]
-                            d = [RX[0] - TXp[0], RX[1] - TXp[1]]
-                            s = [TX[0] - x0[0], TX[1] - x0[1]]
-                            t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
-
-                            PSsn = s[0] * n[0] + s[1] * n[1]
-                            PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                            if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i - 1].length:
-                                P5 = [x0[0] + t * u[0], x0[1] + t * u[1]]
-
-                                RX = P5
-                                TXp = [self.imagePoints[i - 2][0], self.imagePoints[i - 2][1]]  # point TX'
-                                TX = [self.originX, self.originY]
-                                x0 = [self.walls[i - 2].origin[0], self.walls[i - 2].origin[1]]
-                                n = [self.walls[i - 2].nX, self.walls[i - 2].nY]
-                                u = [self.walls[i - 2].uX, self.walls[i - 2].uY]
-                                d = [RX[0] - TXp[0], RX[1] - TXp[1]]
-                                s = [TX[0] - x0[0], TX[1] - x0[1]]
-                                t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / (u[0] * d[1] - u[1] * d[0])
-
-                                PSsn = s[0] * n[0] + s[1] * n[1]
-                                PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                                if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= self.walls[i - 2].length:
-                                    P4 = [x0[0] + t * u[0], x0[1] + t * u[1]]
-                                    self.Ppoints6.append(P6)
-                                    self.Ppoints5.append(P5)
-                                    self.Ppoints4.append(P4)
-                                    """print("P4 : ", self.Ppoints4, "rayon : ", self)
-                                    print("P5 : ", self.Ppoints5)
-                                    print("P6 : ", self.Ppoints6)"""
-                                    return True
-
-                    except:
-                        dhj = 5
         else:
-            print("pas de point image")
-            res = True
-
-
-        return res
+            return True
 
     """#constant variables :
     Z0 = 376.730313
@@ -163,10 +161,10 @@ class Ray:
     epsCconcrete = complex(5 * eps0, -(0.014 / omega))
     epsCbrick = complex(4.6 * eps0, -(0.02 / omega))
 
-    alphaMconcrete = omega * math.sqrt(5 * c / 2 * (math.sqrt(1 + (0.014 / omega / 5 / 8.854e-12) ** 2)-1))
-    alphaMbrick = omega * math.sqrt(4.6 * c / 2 * (1 + math.sqrt(1 + (0.02 / omega / 4.6 / 8.854e-12) ** 2) -1))
-    betaMconcrete = omega * math.sqrt(5 * c /2*(1+math.sqrt(1+(0.014/omega/5/8.854e-12)**2)+1))
-    betaMbrick = omega * math.sqrt(4.6 * c /2*(1+math.sqrt(1+(0.02/omega/4.6/8.854e-12)**2)+1))
+    alphaMconcrete = omega * math.sqrt(5 * c / 2 * (math.sqrt(1 + (0.014 / omega / 5 / 8.854e-12) ** 2) - 1))
+    alphaMbrick = omega * math.sqrt(4.6 * c / 2 * (1 + math.sqrt(1 + (0.02 / omega / 4.6 / 8.854e-12) ** 2) - 1))
+    betaMconcrete = omega * math.sqrt(5 * c / 2 * (1 + math.sqrt(1 + (0.014 / omega / 5 / 8.854e-12) ** 2) + 1))
+    betaMbrick = omega * math.sqrt(4.6 * c / 2 * (1 + math.sqrt(1 + (0.02 / omega / 4.6 / 8.854e-12) ** 2) + 1))
     Z1 = mu0 * c
     Z2concrete = cmath.sqrt(mu0 / epsCconcrete)
     Z2brick = cmath.sqrt(mu0 / epsCbrick)
@@ -208,15 +206,15 @@ class Ray:
 
     def getTcoef(self, wallsH, wallsV):
         Tcoef_carre = 1
-        for i in range(len(self.Ppoints)+1):
+        for i in range(len(self.Ppoints) + 1):
             if i == 0:
                 Px1 = self.originX
                 Py1 = self.originY
                 Px2 = self.Ppoints[0][0]
                 Py2 = self.Ppoints[0][1]
             elif i == len(self.Ppoints):
-                Px1 = self.Ppoints[i-1][0]
-                Py1 = self.Ppoints[i-1][1]
+                Px1 = self.Ppoints[i - 1][0]
+                Py1 = self.Ppoints[i - 1][1]
                 Px2 = self.receiverX
                 Py2 = self.receiverY
             else:
@@ -230,16 +228,16 @@ class Ray:
             dx = Px2 - Px1
             dy = Py2 - Py1
             d = math.sqrt(dx ** 2 + dy ** 2)  # NOTE :valeurs présentes dans GetPower()
-            for wall in wallsH:          # n= (0,-1)
+            for wall in wallsH:  # n= (0,-1)
                 if Py1 <= wall.origin[1] <= Py2 or Py1 >= wall.origin[1] >= Py2:
                     found = 1
-                    cosOi = -dy                                     # NOTE : valeurs plus ou moins calculées dans # getPower
-                    sinOi = dx                                      #faute expres pour simplifier, cos, sin  corrigés par la suite
-                    proj = (wall.origin[1]-Py2)*sinOi/cosOi
-                    if wall.origin[0] <= Px2-proj <= wall.origin[0]+wall.length:
-                        cosOi /= d                                   #correction des cos et sin pour calculer T
+                    cosOi = -dy  # NOTE : valeurs plus ou moins calculées dans # getPower
+                    sinOi = dx  # faute expres pour simplifier, cos, sin  corrigés par la suite
+                    proj = (wall.origin[1] - Py2) * sinOi / cosOi
+                    if wall.origin[0] <= Px2 - proj <= wall.origin[0] + wall.length:
+                        cosOi /= d  # correction des cos et sin pour calculer T
                         sinOi /= d
-                        Tcoef_carre *= 1           # ATTENTION changer 1 par la formule
+                        Tcoef_carre *= 1  # ATTENTION changer 1 par la formule
                 elif found == 1:
                     break
             # Walls V
@@ -247,14 +245,14 @@ class Ray:
             for wall in wallsV:  # n= (1,0)
                 if Px1 <= wall.origin[0] <= Px2 or Px1 >= wall.origin[0] >= Px2:
                     found = 1
-                    cosOi = dx                      # NOTE : valeurs plus ou moins calculées dans getPower
-                    sinOi = dy                              # faute exprès
+                    cosOi = dx  # NOTE : valeurs plus ou moins calculées dans getPower
+                    sinOi = dy  # faute exprès
                     proj = (Px2 - wall.origin[0]) * sinOi / cosOi
                     if wall.origin[0] <= Px2 - proj <= wall.origin[0] + wall.length:
-                        cosOi /= d               # correction des cos et sin pour calculer T
+                        cosOi /= d  # correction des cos et sin pour calculer T
                         sinOi /= d
-                        Tcoef_carre *= 1            # ATTENTION changer 1 par la formule
+                        Tcoef_carre *= 1  # ATTENTION changer 1 par la formule
                 elif found == 1:
                     break
 
-        return Tcoef_carre   # NOTE: carré ou pas à voir
+        return Tcoef_carre  # NOTE: carré ou pas à voir

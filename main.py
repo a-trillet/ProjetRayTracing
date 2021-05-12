@@ -17,7 +17,7 @@ def collect_results(result):
 
 def nb_of_rays(i, j, walls):
     ray = Ray(100, 65, 10*i, 10*j)
-    rays = getRayImages(100, 65, walls, ray)
+    rays = getRayImage(100, 65, walls, ray)
     return i, j, len(rays)
 
 def main():
@@ -37,12 +37,17 @@ def main():
 
 MAPstyle = 2  # 1(corner) or 2(MET)
 walls = Map.getWalls(MAPstyle)
+wallsh = Map.getWallsH(walls)
+wallsv = Map.getWallsV(walls)
 if MAPstyle == 1:
     ray = Ray(0, 0, 0, 5)
     rays = getRayImages(0, 0, walls, ray)
 else:
     ray = Ray(100, 45, 100, 40)
-    rays = getRayImages(100, 45, walls, ray)
+    init_time = datetime.now()
+    rays = getRayImage(100, 45, wallsh, wallsv, ray)
+    fin_time = datetime.now()
+    print("Execution time image: ", (fin_time - init_time))
 print(len(rays))
 power = 0
 Z0 = 376.730313
@@ -53,9 +58,13 @@ he = -lam/math.pi
 factor = he**2/8/Ra
 Gtx = 1.6977
 Ptx = 0.1   # [W]
+init_time = datetime.now()
 """for i in rays:
     if i.find_Points():
-        power += i.getPower
+        hj = 0
+fin_time = datetime.now()
+print("Execution time Point P: ", (fin_time - init_time))
+power += i.getPower
 power *= factor * 60*Gtx*Ptx"""
 dp.display(MAPstyle, rays)
 
