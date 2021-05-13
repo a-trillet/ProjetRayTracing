@@ -41,11 +41,11 @@ Z2brick = cmath.sqrt(mu0 / epsCbrick)
 #@numba.cuda.jit('void(float32, float32, int8, int8, int8, int8)')
 def calculatePower(dx, dy, nbHc, nbVc, nbHb, nbVb, E):
     coef = 1
-    alphaMconcrete = 6121864080547.301
-    alphaMbrick = 4454703587257557.0
+    alphaMconcrete = 1.6678554713954776
+    alphaMbrick = 2.484083522793021
     beta = 565.878155926954
-    betaMconcrete = 8044234853336171.0
-    betaMbrick = 7715762171124073.0
+    betaMconcrete = 1789.4646281205935
+    betaMbrick = 1716.395226729443
     Z1 = 376.73031346177066
     Z2concrete = (168.47869848039613+0.15702915534584408j)
     Z2brick = (175.6508624825743+0.2542138351688341j)
@@ -124,7 +124,7 @@ if MAPstyle == 1:
     ray = Ray(0, 0, 0, 5)
     rays = getRayImages(0, 0, walls, ray)
 else:
-    ray = Ray(100, 45, 160, 80)
+    ray = Ray(100, 45, 73, 23)
     init_time = datetime.now()
     rays = getRayImage(100, 45, wallsh, wallsv, ray)
     fin_time = datetime.now()
