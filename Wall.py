@@ -5,11 +5,10 @@ mu0 = 4 * math.pi * 10 ** (-7)
 class Wall:
     def __init__(self, xOrigin, yOrigin, xDirection, yDirection, material):
         self.length = math.sqrt(xDirection ** 2 + yDirection ** 2)
-        self.uX = xDirection/self.length                    #vecteur U // au mur
-        self.uY = yDirection/self.length
-        self.nX = yDirection/self.length                        #vecteur N normal au mur
-        self.nY = -xDirection/self.length
-
+        self.uX = int(xDirection/self.length)                    #vecteur U // au mur
+        self.uY = int(yDirection/self.length)
+        self.nX = int(yDirection/self.length)                        #vecteur N normal au mur
+        self.nY = int(-xDirection/self.length)
         self.origin = [xOrigin, yOrigin]
 
         self.mat = -1
