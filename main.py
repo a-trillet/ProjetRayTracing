@@ -8,12 +8,15 @@ from datetime import datetime
 import numba
 from numba import jit, njit, vectorize, cuda, float32, complex64, int8, guvectorize
 
-results = np.zeros((110, 200))
+results = np.zeros((120, 210))
 
 
 def collect_results(result):
     global results
-    results[result[0]][result[1]] = result[2]
+    for i in range(result[3]):
+        for j in range(result[3]):
+            if result[0]+i <110 and result[1]+j <200:
+                results[result[0]+i+5][result[1]+j+5] = result[2]
     print(result[2])
 
 
@@ -39,7 +42,7 @@ Z2brick = cmath.sqrt(mu0 / epsCbrick)
 
 # @guvectorize('complex64(float32, float32, int8, int8, int8, int8)', target='cuda')
 #@numba.cuda.jit('void(float32, float32, int8, int8, int8, int8)')
-def calculatePower(dx, dy, nbHc, nbVc, nbHb, nbVb, E):
+def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
     coef = 1
     alphaMconcrete = 1.6678554713954776
     alphaMbrick = 2.484083522793021
@@ -94,32 +97,87 @@ def calculatePower(dx, dy, nbHc, nbVc, nbHb, nbVb, E):
     E = coef / d**2
     return E
 
-def nb_of_rays(i, j, walls):
-    ray = Ray(100, 65, 10*i, 10*j)
-    rays = getRayImage(100, 65, walls, ray)
-    return i, j, len(rays)
+
+def calculatePower(x, y, wallsh, wallsv, precision, antenna):
+    ray = Ray(antenna[0], antenna[1], x+precision//2, y+precision//2)
+    rays = getRayImage(antenna[0], antenna[1], wallsh, wallsv, ray)
+    power = 0
+    dx = np.zeros(len(rays), dtype=np.float32)
+    dy = np.zeros(len(rays), dtype=np.float32)
+    nbWallsHc = np.zeros(len(rays), dtype=np.int8)
+    nbWallsVc = np.zeros(len(rays), dtype=np.int8)
+    nbWallsHb = np.zeros(len(rays), dtype=np.int8)
+    nbWallsVb = np.zeros(len(rays), dtype=np.int8)
+    En_carre = np.zeros(len(rays), dtype=np.float32)
+    Z0 = 376.730313
+    Ra = 73
+    c = 299792458
+    lam = c / (27 * 10 ** 9)
+    he = -lam / math.pi
+    factor = he ** 2 / 8 / Ra
+    Gtx = 1.6977
+    Ptx = 0.1  # [W]
+    init_time = datetime.now()
+    for i in range(len(rays)):
+        r = rays[i]
+        try:
+            dx[i], dy[i] = r.receiverX - r.imagePoints[-1][0], r.receiverY - r.imagePoints[-1][1]
+            for wall in r.walls:
+                if wall.mat == 1:
+                    if wall.Xdirection == 0:
+                        nbWallsVc[i] += 1
+                    else:
+                        nbWallsHc[i] += 1
+                if wall.mat == 0:
+                    if wall.Xdirection == 0:
+                        nbWallsVb[i] += 1
+                    else:
+                        nbWallsHb[i] += 1
+        except:
+            dx[i], dy[i] = r.receiverX - r.originX, r.receiverY - r.originY
+
+        En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i])
+        En_carre[i] *= r.getTcoef(wallsh, wallsv)
+    for e in En_carre:
+        power += e
+    power *= factor * 60 * Gtx * Ptx
+    print(power)
+    return x, y, power, precision
 
 
 def main():
     init_time = datetime.now()
-    pool = mp.Pool(12)
-    MAPstyle = 2  # 1(corner) or 2(MET)
+    pool = mp.Pool(8)
+
+    MAPstyle = 2               # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
-    for x in range(5):
-        for y in range(5):
-            pool.apply_async(nb_of_rays, args=(x, y, walls), callback=collect_results)
+    wallsh = Map.getWallsH(walls)
+    wallsv = Map.getWallsV(walls)
+    precision = 10         # m^2
+    antennas = [[100, 65]]
+    for antenna in antennas:
+        for x in range(200//precision):
+            for y in range(110//precision):
+                if [x+precision//2, y+precision//2] == antenna:
+                    results[x+precision//2, y+precision//2] = 0.1
+                else:
+                    pool.apply_async(calculatePower,
+                                     args=(x * precision, y * precision, wallsh, wallsv, precision, antenna),
+                                     callback=collect_results)
     pool.close()
     pool.join()
-    #dp.display(MAPstyle, rays)
-    fin_time = datetime.now()
-    print("Execution time: ", (fin_time - init_time))
+    end_time = datetime.now()
+    print("Execution time: ", (end_time - init_time))
+    dp.displayDPM(MAPstyle, results, antennas)
+    dp.displayDebit(MAPstyle, results, antennas)
 
 
 
+
+"""
 MAPstyle = 2  # 1(corner) or 2(MET)
 walls = Map.getWalls(MAPstyle)
-wallsh = Map.getWallsH(walls)
-wallsv = Map.getWallsV(walls)
+
 if MAPstyle == 1:
     ray = Ray(0, 0, 0, 5)
     rays = getRayImages(0, 0, walls, ray)
@@ -166,7 +224,7 @@ for i in range(len(rays)):
     except:
         dx[i], dy[i] = r.receiverX-r.originX , r.receiverY-r.originY
 
-    En_carre[i] = calculatePower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i], E[i])
+    En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i], E[i])
     En_carre[i] *= r.getTcoef(wallsh, wallsv)
 for e in En_carre:
     power += e
@@ -174,12 +232,12 @@ power *= factor * 60*Gtx*Ptx
 print(power)
 fin_time = datetime.now()
 print("Execution time: ", (fin_time - init_time))
-dp.display(MAPstyle, rays)
+dp.display(MAPstyle, rays)"""
 
 
     # print("Number of processors: ", mp.cpu_count())
 
 
-"""if __name__ == '__main__':
+if __name__ == '__main__':
     # freeze_support() here if program needs to be frozen
-    main()  # execute this only when run directly, not when imported!"""
+    main()  # execute this only when run directly, not when imported!
