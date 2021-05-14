@@ -15,14 +15,13 @@ def getRayImage(originX, originY, wallsh, wallsv, oldRay):
             for wall in walls[n]:
                 PsSN = (originX - wall.getOriginX()) * wall.nX + (originY - wall.getOriginY()) * wall.nY
                 if PsSN != 0:
-                    murs = [wall]
-                    imagePoints = [[originX - 2 * PsSN * wall.nX, originY - 2 * PsSN * wall.nY]]
+                    imagePoint = [[originX - 2 * PsSN * wall.nX, originY - 2 * PsSN * wall.nY]]
                     if e == 0:
-                        P1 = find_Point(murs, e, oldRay.receiverX, oldRay.receiverY, originX, originY, imagePoints)
+                        P1 = find_Point([wall], e, oldRay.receiverX, oldRay.receiverY, originX, originY, imagePoint)
                         if P1 is not None:
                             ray = copy.deepcopy(oldRay)
                             ray.walls.append(wall)
-                            ray.imagePoints.extend(imagePoints)
+                            ray.imagePoints.extend(imagePoint)
                             ray.Ppoints.append(P1)
                             rays.append(ray)
                     elif e == 1 or e == 2:
@@ -30,25 +29,23 @@ def getRayImage(originX, originY, wallsh, wallsv, oldRay):
                             for w in walls[j]:
                                 if w != wall:
                                     if j == 0:
-                                        PsSN = imagePoints[0][0] - w.getOriginX()
+                                        PsSN = imagePoint[0][0] - w.getOriginX()
                                     else:
-                                        PsSN = imagePoints[0][1] - w.getOriginY()
+                                        PsSN = imagePoint[0][1] - w.getOriginY()
                                     if PsSN != 0:
-                                        mursc = copy.deepcopy(murs)
-                                        imagePointsc = copy.deepcopy(imagePoints)
+                                        imagePointsc = copy.copy(imagePoint)
                                         if j == 0:
-                                            imagePointsc.append([imagePoints[0][0] - 2 * PsSN, imagePoints[0][1]])
+                                            imagePointsc.append([imagePoint[0][0] - 2 * PsSN, imagePoint[0][1]])
                                         else:
                                             imagePointsc.append(
-                                                [imagePoints[0][0], imagePoints[0][1] - 2 * PsSN])
-                                        mursc.append(w)
+                                                [imagePoint[0][0], imagePoint[0][1] - 2 * PsSN])
                                         if e == 1:
-                                            P2, P3 = find_Point(mursc, e, oldRay.receiverX, oldRay.receiverY, originX,
+                                            P2, P3 = find_Point([wall, w], e, oldRay.receiverX, oldRay.receiverY, originX,
                                                                 originY,
                                                                 imagePointsc)
                                             if P2 is not None:
                                                 ray = copy.deepcopy(oldRay)
-                                                ray.walls.extend(mursc)
+                                                ray.walls.extend([wall, w])
                                                 ray.imagePoints.extend(imagePointsc)
                                                 ray.Ppoints.extend([P2, P3])
                                                 rays.append(ray)
@@ -61,8 +58,7 @@ def getRayImage(originX, originY, wallsh, wallsv, oldRay):
                                                         else:
                                                             PsSN2 = (imagePointsc[1][1] - m.getOriginY())
                                                         if PsSN2 != 0:
-                                                            murscc = copy.deepcopy(mursc)
-                                                            imagePointscc = copy.deepcopy(imagePointsc)
+                                                            imagePointscc = copy.copy(imagePointsc)
                                                             if jj == 0:
                                                                 imagePointscc.append([imagePointsc[1][0] - 2 * PsSN2,
                                                                                       imagePointsc[1][1]])
@@ -70,13 +66,12 @@ def getRayImage(originX, originY, wallsh, wallsv, oldRay):
                                                                 imagePointscc.append(
                                                                     [imagePointsc[1][0],
                                                                      imagePointsc[1][1] - 2 * PsSN2])
-                                                            murscc.append(m)
-                                                            P4, P5, P6 = find_Point(murscc, e, oldRay.receiverX,
+                                                            P4, P5, P6 = find_Point([wall, w, m], e, oldRay.receiverX,
                                                                                     oldRay.receiverY, originX,
                                                                                     originY, imagePointscc)
                                                             if P4 is not None:
                                                                 ray = copy.deepcopy(oldRay)
-                                                                ray.walls.extend(murscc)
+                                                                ray.walls.extend([wall, w, m])
                                                                 ray.imagePoints.extend(imagePointscc)
                                                                 ray.Ppoints.extend([P4, P5, P6])
                                                                 rays.append(ray)

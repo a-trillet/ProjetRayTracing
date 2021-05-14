@@ -153,8 +153,8 @@ def main():
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 10         # m^2
-    antennas = [[100, 65]]
+    precision = 40         # m^2
+    antennas = [[100, 45]]
     for antenna in antennas:
         for x in range(200//precision):
             for y in range(110//precision):
@@ -174,15 +174,16 @@ def main():
 
 
 
-"""
-MAPstyle = 2  # 1(corner) or 2(MET)
-walls = Map.getWalls(MAPstyle)
 
+"""MAPstyle = 2  # 1(corner) or 2(MET)
+walls = Map.getWalls(MAPstyle)
+wallsh = Map.getWallsH(walls)
+wallsv = Map.getWallsV(walls)
 if MAPstyle == 1:
     ray = Ray(0, 0, 0, 5)
     rays = getRayImages(0, 0, walls, ray)
 else:
-    ray = Ray(100, 45, 73, 23)
+    ray = Ray(100, 45, 100, 40)
     init_time = datetime.now()
     rays = getRayImage(100, 45, wallsh, wallsv, ray)
     fin_time = datetime.now()
@@ -241,3 +242,28 @@ dp.display(MAPstyle, rays)"""
 if __name__ == '__main__':
     # freeze_support() here if program needs to be frozen
     main()  # execute this only when run directly, not when imported!
+
+"""7.288447357455732e-09
+7.288447357455732e-09
+9.899063005576875e-09
+2.457860267550925e-08
+9.899063005576875e-09
+2.457860267550925e-08
+7.076678956532395e-08
+7.076678956532395e-08
+2.6830825231432408e-08
+2.6830825231432408e-08
+3.820327510784149e-08
+3.820327510784149e-08
+3.1374440275840464e-07
+3.1374440275840464e-07
+4.345622543516969e-08
+4.345622543516969e-08
+7.784682071154845e-09
+7.784682071154845e-09
+1.0260822783189319e-08
+1.0260822783189319e-08
+Execution time:  0:00:16.849826
+
+Process finished with exit code 0"""
+
