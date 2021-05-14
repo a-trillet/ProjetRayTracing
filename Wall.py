@@ -39,8 +39,6 @@ class Wall:
             self.condctivity = 0.02
             self.relativePermitivity = 4.6
         elif material == "concrete":
-
-
             self.mat = 1
             self.condctivity = 0.014
             self.relativePermitivity = 5
