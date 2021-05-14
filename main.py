@@ -101,7 +101,6 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
         coef *= abs(gammaM) ** (2 * nbVb)
     #print(nbVb, nbHc, nbVc, nbHb, coef, dx, dy)
-    print("reflexion", coef)
     E = coef / d ** 2
     #E=1
     return E
@@ -163,7 +162,7 @@ def main():
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 10  # m^2
+    precision = 5  # m^2
     antennas = [[100, 45]]
     for antenna in antennas:
         for x in range(200 // precision):

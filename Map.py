@@ -10,12 +10,12 @@ def getWallsH(walls):
     for wall in walls:
         if wall.yDirection == 0:
             wallsH.append(wall)
-    walls.sort(key=sortWallsH)
+    wallsH.sort(key=sortWallsH)
     return wallsH
 
 
 def sortWallsV(wall):
-    return wall.origin[1]
+    return wall.origin[0]
 
 
 def getWallsV(walls):
@@ -23,7 +23,7 @@ def getWallsV(walls):
     for wall in walls:
         if wall.xDirection == 0:
             wallsV.append(wall)
-    walls.sort(key=sortWallsV)
+    wallsV.sort(key=sortWallsV)
     return wallsV
 
 
@@ -55,7 +55,7 @@ def getWalls(mapType):
                        [90, 80, 20, 0], [110, 70, 0, 10], [110, 70, 30, 0], [140, 70, 0, 20], [105, 50, 35, 0],
                        [140, 40, 0, 10], [140, 40, 20, 0], [160, 40, 0, 20], [152, 60, 8, 0], [140, 60, 10, 0],
                        [140, 60, 0, 5], [110, 65, 30, 0], [110, 58, 0, 7], [110, 50, 0, 6], [10, 75, 3, 0],
-                       [15, 75, 20, 0], [35, 75, 0, 15], [165, 80, 0, 10]]
+                       [15, 75, 20, 0], [35, 75, 0, 15], [165, 80, 0, 10],[95,30,10,0]]#attention dernier est faux
         coordBeton = [[0, 0, 0, 65], [0, 65, 10, 0], [10, 65, 0, 35], [10, 100, 25, 0], [35, 90, 0, 10],
                       [35, 90, 55, 0], [90, 90, 0, 5], [85, 95, 5, 0], [85, 95, 0, 15], [85, 110, 30, 0],
                       [115, 95, 0, 15], [110, 95, 5, 0], [110, 90, 0, 5], [110, 90, 55, 0], [165, 90, 0, 10],
