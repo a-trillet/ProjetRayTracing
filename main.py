@@ -11,16 +11,18 @@ from numba import jit, njit, vectorize, cuda, float32, complex64, int8, guvector
 results = np.zeros((120, 210))
 
 a = 0
+
+
 def collect_results(result):
     global results
     global a
     for i in range(result[3]):
         for j in range(result[3]):
-            if result[1]+i <110 and result[0]+j <200:
-                results[result[1]+i+5][result[0]+j+5] += result[2]
-    #print(result[2])
-    if result[0]//2 != a:
-        a = result[0]//2
+            if result[1] + i < 110 and result[0] + j < 200:
+                results[result[1] + i + 5][result[0] + j + 5] += result[2]
+    # print(result[2])
+    if result[0] // 2 != a:
+        a = result[0] // 2
         print(a, '%')
 
 
@@ -35,17 +37,17 @@ facEpsconcrete = math.sqrt(1 / 5)
 epsCconcrete = complex(5 * eps0, -(0.014 / omega))
 epsCbrick = complex(4.6 * eps0, -(0.02 / omega))
 
-alphaMconcrete = omega * math.sqrt(5 / 2/c) * math.sqrt((math.sqrt(1 + (0.014 / omega / 5 / 8.854e-12) ** 2)-1))
-alphaMbrick = omega * math.sqrt(4.6 / c / 2) * math.sqrt((math.sqrt(1 + (0.02 / omega / 4.6 / 8.854e-12) ** 2) -1))
-betaMconcrete = omega * math.sqrt(5 / c /2)*math.sqrt((1+math.sqrt(1+(0.014/omega/5/8.854e-12)**2)+1))
-betaMbrick = omega * math.sqrt(4.6 / c /2)*math.sqrt((1+math.sqrt(1+(0.02/omega/4.6/8.854e-12)**2)+1))
+alphaMconcrete = omega * math.sqrt(5 / 2 / c) * math.sqrt((math.sqrt(1 + (0.014 / omega / 5 / 8.854e-12) ** 2) - 1))
+alphaMbrick = omega * math.sqrt(4.6 / c / 2) * math.sqrt((math.sqrt(1 + (0.02 / omega / 4.6 / 8.854e-12) ** 2) - 1))
+betaMconcrete = omega * math.sqrt(5 / c / 2) * math.sqrt((1 + math.sqrt(1 + (0.014 / omega / 5 / 8.854e-12) ** 2) + 1))
+betaMbrick = omega * math.sqrt(4.6 / c / 2) * math.sqrt((1 + math.sqrt(1 + (0.02 / omega / 4.6 / 8.854e-12) ** 2) + 1))
 Z1 = mu0 * c
 Z2concrete = cmath.sqrt(mu0 / epsCconcrete)
 Z2brick = cmath.sqrt(mu0 / epsCbrick)
 
 
 # @guvectorize('complex64(float32, float32, int8, int8, int8, int8)', target='cuda')
-#@numba.cuda.jit('void(float32, float32, int8, int8, int8, int8)')
+# @numba.cuda.jit('void(float32, float32, int8, int8, int8, int8)')
 def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
     coef = 1
     alphaMconcrete = 1.6678554713954776
@@ -54,29 +56,29 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
     betaMconcrete = 1789.4646281205935
     betaMbrick = 1716.395226729443
     Z1 = 376.73031346177066
-    Z2concrete = (168.47869848039613+0.15702915534584408j)
-    Z2brick = (175.6508624825743+0.2542138351688341j)
+    Z2concrete = (168.47869848039613 + 0.15702915534584408j)
+    Z2brick = (175.6508624825743 + 0.2542138351688341j)
     d = math.sqrt(dx ** 2 + dy ** 2)
     if nbHc != 0:
-        cosOi = -dy/d
-        sinOi = dx/d
-        cosOt = math.sqrt(1 - sinOi ** 2 /5)
+        cosOi = -dy / d
+        sinOi = dx / d
+        cosOt = math.sqrt(1 - sinOi ** 2 / 5)
         gammaPerp = (Z2concrete * cosOi - Z1 * cosOt) / (Z2concrete * cosOi + Z1 * cosOt)
         u = cmath.exp(complex(-alphaMconcrete,
                               (
                                   facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
-        coef *= abs(gammaM)**(2*nbHc)
+        coef *= abs(gammaM) ** (2 * nbHc)
     if nbVc != 0:
         cosOi = dx / d
         sinOi = dy / d
-        cosOt = math.sqrt(1 - sinOi ** 2 /5)
+        cosOt = math.sqrt(1 - sinOi ** 2 / 5)
         gammaPerp = (Z2concrete * cosOi - Z1 * cosOt) / (Z2concrete * cosOi + Z1 * cosOt)
         u = cmath.exp(complex(-alphaMconcrete,
                               (
                                   facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
-        coef *= abs(gammaM) ** (2*nbVc)
+        coef *= abs(gammaM) ** (2 * nbVc)
     if nbHb != 0:
         cosOi = -dy / d
         sinOi = dx / d
@@ -86,7 +88,7 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
                               (
                                   facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
-        coef *= abs(gammaM) ** (2*nbHb)
+        coef *= abs(gammaM) ** (2 * nbHb)
 
     if nbVb != 0:
         cosOi = dx / d
@@ -97,15 +99,18 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
                               (
                                   facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
-        coef *= nbVb * abs(gammaM) ** (2*nbVb)
-    E = coef / d**2
+        coef *= abs(gammaM) ** (2 * nbVb)
+    print(nbVb, nbHc, nbVc, nbHb, coef, dx, dy)
+    #E = coef / d ** 2
+    E=1
     return E
 
 
 def calculatePower(x, y, wallsh, wallsv, precision, antenna):
-    ray = Ray(antenna[0], antenna[1], x+precision//2, y+precision//2)
+    ray = Ray(antenna[0], antenna[1], x + precision // 2, y + precision // 2)
     rays = getRayImage(antenna[0], antenna[1], wallsh, wallsv, ray)
     power = 0
+
     dx = np.zeros(len(rays), dtype=np.float32)
     dy = np.zeros(len(rays), dtype=np.float32)
     nbWallsHc = np.zeros(len(rays), dtype=np.int8)
@@ -121,27 +126,28 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
     factor = he ** 2 / 8 / Ra
     Gtx = 1.6977
     Ptx = 0.1  # [W]
-    init_time = datetime.now()
     for i in range(len(rays)):
         r = rays[i]
-        try:
+        if len(r.imagePoints) != 0:
             dx[i], dy[i] = r.receiverX - r.imagePoints[-1][0], r.receiverY - r.imagePoints[-1][1]
             for wall in r.walls:
                 if wall.mat == 1:
-                    if wall.Xdirection == 0:
+                    if wall.xDirection == 0:
                         nbWallsVc[i] += 1
                     else:
                         nbWallsHc[i] += 1
-                if wall.mat == 0:
-                    if wall.Xdirection == 0:
+                elif wall.mat == 0:
+                    if wall.yDirection == 0:
                         nbWallsVb[i] += 1
                     else:
                         nbWallsHb[i] += 1
-        except:
+        else:
             dx[i], dy[i] = r.receiverX - r.originX, r.receiverY - r.originY
+            print('okok')
 
         En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i])
         En_carre[i] *= r.getTcoef(wallsh, wallsv)
+        a=1
     for e in En_carre:
         power += e
     power *= factor * 60 * Gtx * Ptx
@@ -150,19 +156,19 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
 
 def main():
     init_time = datetime.now()
-    pool = mp.Pool(8)
+    pool = mp.Pool(1)
 
-    MAPstyle = 2               # 1(corner) or 2(MET)
+    MAPstyle = 1  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 5         # m^2
+    precision = 20  # m^2
     antennas = [[100, 45]]
     for antenna in antennas:
-        for x in range(200//precision):
-            for y in range(110//precision):
-                if [x*precision+precision//2, y*precision+precision//2] == antenna:
-                    results[x*precision+precision//2, y*precision+precision//2] += 0.1
+        for x in range(200 // precision):
+            for y in range(110 // precision):
+                if [x * precision + precision // 2, y * precision + precision // 2] == antenna:
+                    results[x * precision + precision // 2, y * precision + precision // 2] += 0.1
                 else:
                     pool.apply_async(calculatePower,
                                      args=(x * precision, y * precision, wallsh, wallsv, precision, antenna),
@@ -173,9 +179,6 @@ def main():
     print("Execution time: ", (end_time - init_time))
     dp.displayDPM(MAPstyle, results, antennas)
     dp.displayDebit(MAPstyle, results, antennas)
-
-
-
 
 
 """MAPstyle = 2  # 1(corner) or 2(MET)
@@ -238,8 +241,7 @@ fin_time = datetime.now()
 print("Execution time: ", (fin_time - init_time))
 dp.display(MAPstyle, rays)"""
 
-
-    # print("Number of processors: ", mp.cpu_count())
+# print("Number of processors: ", mp.cpu_count())
 
 
 if __name__ == '__main__':
@@ -269,4 +271,3 @@ if __name__ == '__main__':
 Execution time:  0:00:16.849826
 
 Process finished with exit code 0"""
-

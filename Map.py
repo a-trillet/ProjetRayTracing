@@ -30,10 +30,10 @@ def getWallsV(walls):
 def getWalls(mapType):
     walls = []
     if mapType == 1:
-        walls.append(Wall(15, 0, 0, 10, "concrete"))
-        walls.append(Wall(-10, 0, 0, 10, "concrete"))
-        walls.append(Wall(0, 10, 15, 0, "brick"))
-        walls.append(Wall(100, -5, 0, 100, 'brick'))
+        walls.append(Wall(130, 30, 0, 50, "concrete"))
+        walls.append(Wall(50, 80, 70, 0, "concrete"))
+        #walls.append(Wall(0, 10, 10, 0, "brick"))
+        #walls.append(Wall(100, -5, 0, 100, 'brick'))
     """ 
         shéma du système de deux murs 
          

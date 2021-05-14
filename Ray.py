@@ -23,13 +23,6 @@ class Ray:
 
         self.Ppoints = []
 
-        self.Ppoints2 = []
-        self.Ppoints3 = []
-
-        self.Ppoints4 = []
-        self.Ppoints5 = []
-        self.Ppoints6 = []
-
 
 
     """#constant variables :
@@ -134,11 +127,12 @@ class Ray:
         return power
 
     def getTcoef(self, wallsH, wallsV):
-        try:
+        if len(self.imagePoints) != 0:
             dx = self.receiverX - self.imagePoints[-1][0]
             dy = self.receiverY - self.imagePoints[-1][1]
             d = math.sqrt(dx ** 2 + dy ** 2)
-        except:
+            a=1
+        else:
             dx = self.receiverX - self.originX
             dy = self.receiverY - self.originY
             d = math.sqrt(dx ** 2 + dy ** 2)

@@ -15,8 +15,8 @@ class Wall:
         self.relativePermitivity = 0
         self.condctivity = 0
         self.thickness = 0.5                                #en mètre
-        self.xDirection = xDirection                        #pour l'affichage
-        self.yDirection = yDirection
+        self.xDirection = int(xDirection)                        #pour l'affichage
+        self.yDirection = int(yDirection)
 
         self.setProperty(material)
 
