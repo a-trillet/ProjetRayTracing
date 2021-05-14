@@ -137,7 +137,7 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
                     else:
                         nbWallsHc[i] += 1
                 elif wall.mat == 0:
-                    if wall.yDirection == 0:
+                    if wall.xDirection == 0:
                         nbWallsVb[i] += 1
                     else:
                         nbWallsHb[i] += 1
@@ -156,7 +156,7 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
 
 def main():
     init_time = datetime.now()
-    pool = mp.Pool(8)
+    pool = mp.Pool(10)
 
     MAPstyle = 2  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
@@ -168,7 +168,8 @@ def main():
         for x in range(200 // precision):
             for y in range(110 // precision):
                 if [x * precision + precision // 2, y * precision + precision // 2] == antenna:
-                    results[x * precision + precision // 2, y * precision + precision // 2] += 0.1
+                    #results[x * precision + precision // 2, y * precision + precision // 2] += 0.1
+                    a=1
                 else:
                     pool.apply_async(calculatePower,
                                      args=(x * precision, y * precision, wallsh, wallsv, precision, antenna),
