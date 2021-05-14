@@ -10,14 +10,18 @@ from numba import jit, njit, vectorize, cuda, float32, complex64, int8, guvector
 
 results = np.zeros((120, 210))
 
-
+a = 0
 def collect_results(result):
     global results
+    global a
     for i in range(result[3]):
         for j in range(result[3]):
-            if result[0]+i <110 and result[1]+j <200:
-                results[result[0]+i+5][result[1]+j+5] = result[2]
-    print(result[2])
+            if result[1]+i <110 and result[0]+j <200:
+                results[result[1]+i+5][result[0]+j+5] += result[2]
+    #print(result[2])
+    if result[0]//2 != a:
+        a = result[0]//2
+        print(a, '%')
 
 
 omega = 2 * math.pi * 27e9
@@ -141,7 +145,6 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
     for e in En_carre:
         power += e
     power *= factor * 60 * Gtx * Ptx
-    print(power)
     return x, y, power, precision
 
 
@@ -153,13 +156,13 @@ def main():
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 40         # m^2
+    precision = 5         # m^2
     antennas = [[100, 45]]
     for antenna in antennas:
         for x in range(200//precision):
             for y in range(110//precision):
-                if [x+precision//2, y+precision//2] == antenna:
-                    results[x+precision//2, y+precision//2] = 0.1
+                if [x*precision+precision//2, y*precision+precision//2] == antenna:
+                    results[x*precision+precision//2, y*precision+precision//2] += 0.1
                 else:
                     pool.apply_async(calculatePower,
                                      args=(x * precision, y * precision, wallsh, wallsv, precision, antenna),
