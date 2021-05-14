@@ -63,7 +63,7 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
         cosOi = -dy / d
         sinOi = dx / d
         cosOt = math.sqrt(1 - sinOi ** 2 / 5)
-        gammaPerp = (Z2concrete * cosOi - Z1 * cosOt) / (Z2concrete * cosOi + Z1 * cosOt)
+        gammaPerp = (Z2concrete * abs(cosOi) - Z1 * cosOt) / (Z2concrete * abs(cosOi) + Z1 * cosOt)
         u = cmath.exp(complex(-alphaMconcrete,
                               (
                                   facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
@@ -73,7 +73,7 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
         cosOi = dx / d
         sinOi = dy / d
         cosOt = math.sqrt(1 - sinOi ** 2 / 5)
-        gammaPerp = (Z2concrete * cosOi - Z1 * cosOt) / (Z2concrete * cosOi + Z1 * cosOt)
+        gammaPerp = (Z2concrete * abs(cosOi) - Z1 * cosOt) / (Z2concrete * abs(cosOi) + Z1 * cosOt)
         u = cmath.exp(complex(-alphaMconcrete,
                               (
                                   facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
@@ -83,7 +83,7 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
         cosOi = -dy / d
         sinOi = dx / d
         cosOt = math.sqrt(1 - sinOi ** 2 / 4.6)
-        gammaPerp = (Z2brick * cosOi - Z1 * cosOt) / (Z2brick * cosOi + Z1 * cosOt)
+        gammaPerp = (Z2brick * abs(cosOi) - Z1 * cosOt) / (Z2brick * abs(cosOi) + Z1 * cosOt)
         u = cmath.exp(complex(-alphaMbrick,
                               (
                                   facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
@@ -94,15 +94,15 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
         cosOi = dx / d
         sinOi = dy / d
         cosOt = math.sqrt(1 - sinOi ** 2 / 4.6)
-        gammaPerp = (Z2brick * cosOi - Z1 * cosOt) / (Z2brick * cosOi + Z1 * cosOt)
+        gammaPerp = (Z2brick * abs(cosOi) - Z1 * cosOt) / (Z2brick * abs(cosOi) + Z1 * cosOt)
         u = cmath.exp(complex(-alphaMbrick,
                               (
                                   facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
         coef *= abs(gammaM) ** (2 * nbVb)
-    print(nbVb, nbHc, nbVc, nbHb, coef, dx, dy)
-    #E = coef / d ** 2
-    E=1
+    #print(nbVb, nbHc, nbVc, nbHb, coef, dx, dy)
+    E = coef / d ** 2
+    #E=1
     return E
 
 
@@ -143,7 +143,7 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
                         nbWallsHb[i] += 1
         else:
             dx[i], dy[i] = r.receiverX - r.originX, r.receiverY - r.originY
-            print('okok')
+            #print('okok')
 
         En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i])
         En_carre[i] *= r.getTcoef(wallsh, wallsv)
@@ -156,13 +156,13 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
 
 def main():
     init_time = datetime.now()
-    pool = mp.Pool(1)
+    pool = mp.Pool(8)
 
-    MAPstyle = 1  # 1(corner) or 2(MET)
+    MAPstyle = 2  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 20  # m^2
+    precision = 10  # m^2
     antennas = [[100, 45]]
     for antenna in antennas:
         for x in range(200 // precision):
