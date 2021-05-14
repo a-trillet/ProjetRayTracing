@@ -101,6 +101,7 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
         coef *= abs(gammaM) ** (2 * nbVb)
     #print(nbVb, nbHc, nbVc, nbHb, coef, dx, dy)
+    print("reflexion", coef)
     E = coef / d ** 2
     #E=1
     return E

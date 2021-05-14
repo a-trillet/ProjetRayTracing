@@ -131,7 +131,7 @@ class Ray:
             dx = self.receiverX - self.imagePoints[-1][0]
             dy = self.receiverY - self.imagePoints[-1][1]
             d = math.sqrt(dx ** 2 + dy ** 2)
-            a=1
+            a = 1
         else:
             dx = self.receiverX - self.originX
             dy = self.receiverY - self.originY
@@ -191,6 +191,7 @@ class Ray:
                                 TmC = abs((1 - gammaPerp ** 2) * cmath.exp(complex(0, -betaMconcrete / 2 / cosOtC)) / (
                                             1 - gammaPerp ** 2 * u))
                                 Tcoef_carre *= TmC ** 2
+                                print("wapiti ", self, Tcoef_carre)
                         elif wall.mat == 0:
                             if TmB == 0:
                                 gammaPerp = (Z2brick * abs(cosOi) - Z1 * cosOtB) / (Z2brick * abs(cosOi) + Z1 * cosOtB)
@@ -200,6 +201,7 @@ class Ray:
                                 TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(0, -betaMconcrete / 2 / cosOtB)) / (
                                             1 - gammaPerp ** 2 * u))
                                 Tcoef_carre *= TmB ** 2
+                                print("wapiti ", self, Tcoef_carre)
                 elif found == 1:
                     break
             # Walls V
@@ -221,6 +223,7 @@ class Ray:
                                 u = cmath.exp(complex(-alphaMconcrete,(facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOtC)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
                                 TmC = abs((1 - gammaPerp ** 2) * cmath.exp(complex(0, -betaMconcrete / 2 / cosOtC)) / (1 - gammaPerp ** 2 * u))
                                 Tcoef_carre *= TmC ** 2
+                                print("wapiti ", self, Tcoef_carre)
                         elif wall.mat == 0:
                             if TmB == 0:
                                 gammaPerp = (Z2brick * abs(cosOi) - Z1 * cosOtB) / (Z2brick * abs(cosOi) + Z1 * cosOtB)
@@ -230,7 +233,8 @@ class Ray:
                                 TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(0, -betaMconcrete / 2 / cosOtB)) / (
                                         1 - gammaPerp ** 2 * u))
                                 Tcoef_carre *= TmB ** 2
+                                print("wapiti ", self, Tcoef_carre)
                 elif found == 1:
                     break
-
+        print("transmission", Tcoef_carre)
         return Tcoef_carre  # NOTE: carré ou pas à voir
