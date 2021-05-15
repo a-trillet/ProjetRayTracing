@@ -2,17 +2,19 @@ import numpy as np
 import main
 import Display
 
-"""with open("antenna0", 'rb') as f:
+with open("antenna0", 'rb') as f:
     a = np.load(f)
 #Display.displayDPM(1, a, [[100, 45]])
-f.close()"""
+f.close()
 
 with open("antenna1", 'rb') as f:
     b = np.load(f)
-Display.displayDPM(1, b, [[0, 0]])
+#Display.displayDPM(1, b)
 f.close()
 
 with open("antenna2", 'rb') as f:
     c = np.load(f)
-Display.displayDPM(1, c, [[175, 80]])
+#Display.displayDPM(1, c)
 f.close()
+
+Display.displayDPM(1, a+c)

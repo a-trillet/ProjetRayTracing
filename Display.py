@@ -4,7 +4,7 @@ import random
 import Map
 
 
-def displayDPM(MAPstyle, results, antenna):
+def displayDPM(MAPstyle, results):
     """
         plt.plot(x, y, label="quadratique")
         plt.plot(x, x ** 3, label="cubique")
