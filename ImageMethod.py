@@ -40,7 +40,8 @@ def getRayImage(originX, originY, wallsh, wallsv, oldRay):
                                             imagePointsc.append(
                                                 [imagePoint[0][0], imagePoint[0][1] - 2 * PsSN])
                                         if e == 1:
-                                            P2, P3 = find_Point([wall, w], e, oldRay.receiverX, oldRay.receiverY, originX,
+                                            P2, P3 = find_Point([wall, w], e, oldRay.receiverX, oldRay.receiverY,
+                                                                originX,
                                                                 originY,
                                                                 imagePointsc)
                                             if P2 is not None:
@@ -75,51 +76,6 @@ def getRayImage(originX, originY, wallsh, wallsv, oldRay):
                                                                 ray.imagePoints.extend(imagePointscc)
                                                                 ray.Ppoints.extend([P4, P5, P6])
                                                                 rays.append(ray)
-
-
-    return rays
-
-
-# créer un ray de base Ray(originX, originY, receiverX, receiverY))
-def getRayImages(originX, originY, walls, oldRay):
-    rays = []
-    e = len(oldRay.imagePoints)
-    if True:
-        # rays.append(oldRay)
-        if e < 3:
-            for wall in walls:
-                try:
-                    if wall != oldRay.walls[-1]:
-                        PsSN = (originX - wall.getOriginX()) * wall.nX + (originY - wall.getOriginY()) * wall.nY
-                        if PsSN != 0:
-                            ray = copy.deepcopy(oldRay)
-                            if True:
-                                ray.walls.append(wall)
-                                ray.imagePoints.append([originX - 2 * PsSN * wall.nX, originY - 2 * PsSN * wall.nY])
-                                rays.extend(getRayImages(ray.imagePoints[e][0], ray.imagePoints[e][1], walls, ray))
-                    # else:
-                    # print("rayon // à un mur")
-                # else:
-                # print(wall.origin[0])
-                # else:
-                # print("chaud")
-                except:
-                    if not oldRay.imagePoints:
-                        PsSN = (originX - wall.getOriginX()) * wall.nX + (originY - wall.getOriginY()) * wall.nY
-                        if PsSN != 0:
-                            ray = copy.deepcopy(oldRay)
-                            if True:
-                                ray.walls.append(wall)
-                                ray.imagePoints.append([originX - 2 * PsSN * wall.nX, originY - 2 * PsSN * wall.nY])
-                                rays.extend(getRayImages(ray.imagePoints[e][0], ray.imagePoints[e][1], walls, ray))
-                    # else:
-                    # print("rayon // à un mur")
-                # else:
-                # print(wall.origin[0])
-                # else:
-                # print("chaud")n
-    if oldRay.find_Points():
-        rays.append(oldRay)
     return rays
 
 

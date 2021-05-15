@@ -1,3 +1,4 @@
+import Display
 import Map
 from Ray import *
 from ImageMethod import *
@@ -100,7 +101,6 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb, ray):
                                   facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
         coef *= abs(gammaM) ** (2 * nbVb)
-    # print(nbVb, nbHc, nbVc, nbHb, coef, dx, dy)
     E = coef / d ** 2
     # E=1
     return E
@@ -143,11 +143,8 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
                         nbWallsHb[i] += 1
         else:
             dx[i], dy[i] = r.receiverX - r.originX, r.receiverY - r.originY
-            # print('okok')
-
         En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i], r)
         En_carre[i] *= r.getTcoef(wallsh, wallsv)
-        a = 1
     for e in En_carre:
         power += e
     power *= factor * 60 * Gtx * Ptx
@@ -162,11 +159,10 @@ def main(antenna, i):
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 1  # m^2
+    precision = 10  # m^2
     for x in range(200 // precision):
         for y in range(110 // precision):
             if [x * precision + precision // 2, y * precision + precision // 2] == antenna:
-                # results[x * precision + precision // 2, y * precision + precision // 2] += 0.1
                 a = 1
             else:
                 pool.apply_async(calculatePower,
@@ -177,107 +173,18 @@ def main(antenna, i):
     pool.join()
     end_time = datetime.now()
     print("Execution time: ", (end_time - init_time))
-    #dp.displayDPM(MAPstyle, results, antennas)
-    #dp.displayDebit(MAPstyle, results, antennas)
-    w = str(5)
+    Display.displayDPM(2, results)
+    Display.displayDebit(2, results)
+    """w = str(5)
     with open('antenna' + w, 'wb') as f:
         np.save(f, results)
-    f.close()
-
-
-"""MAPstyle = 2  # 1(corner) or 2(MET)
-walls = Map.getWalls(MAPstyle)
-wallsh = Map.getWallsH(walls)
-wallsv = Map.getWallsV(walls)
-if MAPstyle == 1:
-    ray = Ray(0, 0, 0, 5)
-    rays = getRayImages(0, 0, walls, ray)
-else:
-    ray = Ray(100, 45, 100, 40)
-    init_time = datetime.now()
-    rays = getRayImage(100, 45, wallsh, wallsv, ray)
-    fin_time = datetime.now()
-    print("Execution time image: ", (fin_time - init_time))
-print(len(rays))
-power = 0
-E = np.zeros(len(rays), dtype=np.float32)
-dx = np.zeros(len(rays), dtype=np.float32)
-dy = np.zeros(len(rays), dtype=np.float32)
-nbWallsHc = np.zeros(len(rays), dtype=np.int8)
-nbWallsVc = np.zeros(len(rays), dtype=np.int8)
-nbWallsHb = np.zeros(len(rays), dtype=np.int8)
-nbWallsVb = np.zeros(len(rays), dtype=np.int8)
-Z0 = 376.730313
-Ra = 73
-c = 299792458
-lam = c/(27 * 10**9)
-he = -lam/math.pi
-factor = he**2/8/Ra
-Gtx = 1.6977
-Ptx = 0.1   # [W]
-En_carre = np.zeros(len(rays), dtype=np.float32)
-init_time = datetime.now()
-for i in range(len(rays)):
-    r = rays[i]
-    try:
-        dx[i], dy[i] = r.receiverX-r.imagePoints[-1][0] , r.receiverY-r.imagePoints[-1][1]
-        for wall in r.walls:
-            if wall.mat == 1:
-                if wall.Xdirection == 0:
-                    nbWallsVc[i] += 1
-                else:
-                    nbWallsHc[i] += 1
-            if wall.mat == 0:
-                if wall.Xdirection == 0:
-                    nbWallsVb[i] += 1
-                else:
-                    nbWallsHb[i] += 1
-    except:
-        dx[i], dy[i] = r.receiverX-r.originX , r.receiverY-r.originY
-
-    En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i], E[i])
-    En_carre[i] *= r.getTcoef(wallsh, wallsv)
-for e in En_carre:
-    power += e
-power *= factor * 60*Gtx*Ptx
-print(power)
-fin_time = datetime.now()
-print("Execution time: ", (fin_time - init_time))
-dp.display(MAPstyle, rays)"""
-
-# print("Number of processors: ", mp.cpu_count())
-
+    f.close()"""
 
 if __name__ == '__main__':
     #antennas = [[40, 20], [100, 90], [170, 20]]
-    antennas = [[170, 20]]
+    antennas = [[100, 45]]
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((120, 210))
         main(antennas[i], i)  # execute this only when run directly, not when imported!
         results = np.zeros((120, 210))
-
-
-"""7.288447357455732e-09
-7.288447357455732e-09
-9.899063005576875e-09
-2.457860267550925e-08
-9.899063005576875e-09
-2.457860267550925e-08
-7.076678956532395e-08
-7.076678956532395e-08
-2.6830825231432408e-08
-2.6830825231432408e-08
-3.820327510784149e-08
-3.820327510784149e-08
-3.1374440275840464e-07
-3.1374440275840464e-07
-4.345622543516969e-08
-4.345622543516969e-08
-7.784682071154845e-09
-7.784682071154845e-09
-1.0260822783189319e-08
-1.0260822783189319e-08
-Execution time:  0:00:16.849826
-
-Process finished with exit code 0"""
