@@ -13,10 +13,10 @@ def displayDPM(MAPstyle, results):
         """
     a = 200
     b = 110
-    x = np.linspace(-5, a + 1 + 5, a + 10)  # initialisation des axes et points
-    y = np.linspace(-5, b + 1 + 5, b + 10)
+    x = np.linspace(-5, a + 4, a + 10)  # initialisation des axes et points
+    y = np.linspace(-5, b + 4, b + 10)
     X, Y = np.meshgrid(x, y)
-    plt.figure(figsize=(19, 9))
+    plt.figure(figsize=(20, 10))
 
     # Z = np.random.randint(40, 320, (b+10, a+10))  # il y a plus q'a mettre un tableau de données pour z et c'est plié
 
@@ -44,7 +44,7 @@ def displayDPM(MAPstyle, results):
     plt.show()
 
 
-def displayDebit(MAPstyle, results, antennas):
+def displayDebit(MAPstyle, results):
     """
             plt.plot(x, y, label="quadratique")
             plt.plot(x, x ** 3, label="cubique")
@@ -68,8 +68,8 @@ def displayDebit(MAPstyle, results, antennas):
 
     a = 200
     b = 110
-    x = np.linspace(-5, a + 1 + 5, a + 10)  # initialisation des axes et points
-    y = np.linspace(-5, b + 1 + 5, b + 10)
+    x = np.linspace(-5, a + 4, a + 10)  # initialisation des axes et points
+    y = np.linspace(-5, b + 4, b + 10)
     X, Y = np.meshgrid(x, y)
     plt.figure(figsize=(19, 9))
 
@@ -86,8 +86,8 @@ def displayDebit(MAPstyle, results, antennas):
         elif i.mat == 1:
             plt.plot(x1, y1, c="gray", lw=3)
 
-    for antenna in antennas:
-        plt.scatter(antenna[0], antenna[1], c="black")  # points émetteurs
+    #for antenna in antennas:
+        #plt.scatter(antenna[0], antenna[1], c="black")  # points émetteurs
 
     plt.title("Débit binaire en [Mb/s]")
     plt.xlabel("axe x")
@@ -119,9 +119,9 @@ def display(map_style, rays):
         x1 = [i.getOriginX(), i.getOriginX() + i.xDirection]
         y1 = [i.getOriginY(), i.getOriginY() + i.yDirection]
         if i.mat == 0:
-            plt.plot(x1, y1, c="red", lw=3)
+            plt.plot(x1, y1, c="blue", lw=1)
         elif i.mat == 1:
-            plt.plot(x1, y1, c="gray", lw=3)
+            plt.plot(x1, y1, c="gray", lw=1)
 
     plt.scatter(100, 45, c="black")  # point émetteur initial
 

@@ -156,9 +156,9 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
 
 def main(antenna, i):
     init_time = datetime.now()
-    pool = mp.Pool(6)
+    pool = mp.Pool(12)
     global results
-    MAPstyle = 1  # 1(corner) or 2(MET)
+    MAPstyle = 2  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
@@ -249,7 +249,7 @@ dp.display(MAPstyle, rays)"""
 
 
 if __name__ == '__main__':
-    antennas = [[100, 45], [0, 0], [175, 80]]
+    antennas = [[79, 31]]
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((120, 210))
