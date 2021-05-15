@@ -45,10 +45,10 @@ class Ray:
     epsCconcrete = complex(5 * eps0, -(0.014 / omega))
     epsCbrick = complex(4.6 * eps0, -(0.02 / omega))
 
-    alphaMconcrete = omega * math.sqrt(mu0 * eps0 * 5) * math.sqrt(math.sqrt(1 + (0.014 / (omega * 5 * eps0)) ** 2) - 1)
-    alphaMbrick = omega * math.sqrt(mu0 * eps0 * 4.6) * math.sqrt(math.sqrt(1 + (0.02 / (omega * 4.6 * eps0)) ** 2) - 1)
-    betaMconcrete = omega * math.sqrt(mu0 * eps0 * 5) * math.sqrt(math.sqrt(1 + (0.014 / (omega * 5 * eps0)) ** 2) + 1)
-    betaMbrick = omega * math.sqrt(mu0 * eps0 * 4.6) * math.sqrt(math.sqrt(1 + (0.02 / (omega * 4.6 * eps0)) ** 2) + 1)
+    alphaMconcrete = omega * math.sqrt(mu0 * eps0 * 5/2) * math.sqrt(math.sqrt(1 + (0.014 / (omega * 5 * eps0)) ** 2) - 1)
+    alphaMbrick = omega * math.sqrt(mu0 * eps0 * 4.6/2) * math.sqrt(math.sqrt(1 + (0.02 / (omega * 4.6 * eps0)) ** 2) - 1)
+    betaMconcrete = omega * math.sqrt(mu0 * eps0 * 5/2) * math.sqrt(math.sqrt(1 + (0.014 / (omega * 5 * eps0)) ** 2) + 1)
+    betaMbrick = omega * math.sqrt(mu0 * eps0 * 4.6/2) * math.sqrt(math.sqrt(1 + (0.02 / (omega * 4.6 * eps0)) ** 2) + 1)
 
     Z1 = mu0 * c
     Z2concrete = cmath.sqrt(mu0 / epsCconcrete)
@@ -132,11 +132,11 @@ class Ray:
         facEpsbrick = 0.4662524041201569
         facEpsconcrete = 0.4472135954999579
         Tcoef_carre = 1
-        alphaMconcrete = 1.6678554713954776
-        alphaMbrick = 2.484083522793021
+        alphaMconcrete = 1.1793519138628281
+        alphaMbrick = 1.756512304000713
         beta = 565.878155926954
-        betaMconcrete = 1789.4646281205935
-        betaMbrick = 1716.395226729443
+        betaMconcrete = 1265.3425732375354
+        betaMbrick = 1213.674704016611
         Z1 = 376.73031346177066
         Z2concrete = (168.47869848039613 + 0.15702915534584408j)
         Z2brick = (175.6508624825743 + 0.2542138351688341j)

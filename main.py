@@ -48,13 +48,13 @@ Z2brick = cmath.sqrt(mu0 / epsCbrick)
 
 # @guvectorize('complex64(float32, float32, int8, int8, int8, int8)', target='cuda')
 # @numba.cuda.jit('void(float32, float32, int8, int8, int8, int8)')
-def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
+def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb, ray):
     coef = 1
-    alphaMconcrete = 1.6678554713954776
-    alphaMbrick = 2.484083522793021
+    alphaMconcrete = 1.1793519138628281
+    alphaMbrick = 1.756512304000713
     beta = 565.878155926954
-    betaMconcrete = 1789.4646281205935
-    betaMbrick = 1716.395226729443
+    betaMconcrete = 1265.3425732375354
+    betaMbrick = 1213.674704016611
     Z1 = 376.73031346177066
     Z2concrete = (168.47869848039613 + 0.15702915534584408j)
     Z2brick = (175.6508624825743 + 0.2542138351688341j)
@@ -145,7 +145,7 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
             dx[i], dy[i] = r.receiverX - r.originX, r.receiverY - r.originY
             #print('okok')
 
-        En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i])
+        En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i], r)
         En_carre[i] *= r.getTcoef(wallsh, wallsv)
         a=1
     for e in En_carre:
@@ -156,13 +156,13 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
 
 def main():
     init_time = datetime.now()
-    pool = mp.Pool(10)
+    pool = mp.Pool(6)
 
-    MAPstyle = 1  # 1(corner) or 2(MET)
+    MAPstyle = 2  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 20  # m^2
+    precision = 10   # m^2
     antennas = [[100, 45]]
     for antenna in antennas:
         for x in range(200 // precision):
@@ -174,6 +174,7 @@ def main():
                     pool.apply_async(calculatePower,
                                      args=(x * precision, y * precision, wallsh, wallsv, precision, antenna),
                                      callback=collect_results)
+        print("c'est : ", calculatePower(190, 90, wallsh, wallsv, precision, antenna))
     pool.close()
     pool.join()
     end_time = datetime.now()
