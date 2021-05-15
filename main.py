@@ -159,7 +159,7 @@ def main(antenna, i):
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 10  # m^2
+    precision = 1  # m^2
     for x in range(200 // precision):
         for y in range(110 // precision):
             if [x * precision + precision // 2, y * precision + precision // 2] == antenna:
@@ -173,16 +173,14 @@ def main(antenna, i):
     pool.join()
     end_time = datetime.now()
     print("Execution time: ", (end_time - init_time))
-    Display.displayDPM(2, results)
-    Display.displayDebit(2, results)
-    """w = str(5)
+    w = str(6)
     with open('antenna' + w, 'wb') as f:
         np.save(f, results)
-    f.close()"""
+    f.close()
 
 if __name__ == '__main__':
     #antennas = [[40, 20], [100, 90], [170, 20]]
-    antennas = [[100, 45]]
+    antennas = [[170, 20]]
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((120, 210))

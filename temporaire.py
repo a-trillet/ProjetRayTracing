@@ -167,3 +167,75 @@ def getRayImages(originX, originY, walls, oldRay):
         rays.append(oldRay)
     return rays
 """
+
+"""def getPower(self):  # en fait pas vraiment power mais |E|**2
+    coefficients = 1
+    # coefficients de reflexion:
+    e = len(self.imagePoints)
+    for i in range(e):
+        wall = self.walls[i]
+        dx = self.Ppoints[i][0] - self.imagePoints[i][0]
+        dy = self.Ppoints[i][1] - self.imagePoints[i][1]
+        d = math.sqrt(dx ** 2 + dy ** 2)
+
+        cosOi = (dx * wall.nX + dy * wall.nY) / d
+        sinOi = (dx * wall.nY - dy * wall.nX) / d
+        cosOt = math.sqrt(1 - sinOi ** 2 / wall.relativePermitivity)
+        if wall.mat == 1:
+            gammaPerp = (self.Z2concrete * cosOi - self.Z1 * cosOt) / (self.Z2concrete * cosOi + self.Z1 * cosOt)
+            u = cmath.exp(complex(-self.alphaMconcrete,
+                                  (
+                                      self.facEpsconcrete) * sinOi ** 2 * self.beta - self.betaMconcrete) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
+            gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
+            coefficients *= abs(gammaM)
+        elif wall.mat == 0:
+            gammaPerp = (self.Z2brick * cosOi - self.Z1 * cosOt) / (self.Z2brick * cosOi + self.Z1 * cosOt)
+            u = cmath.exp(complex(-self.alphaMbrick,
+                                  (self.facEpsbrick) * sinOi ** 2 * self.beta - self.betaMbrick) / cosOt)
+            gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
+            coefficients *= abs(gammaM)
+
+    if not self.imagePoints:
+        dn_carre = (self.receiverX - self.originX) ** 2 + (self.receiverY - self.originY) ** 2
+    else:
+        dn_carre = (self.receiverX - self.imagePoints[-1][0]) ** 2 + (self.receiverY - self.imagePoints[-1][1]) ** 2
+
+    power = coefficients ** 2 / dn_carre
+
+    return power"""
+
+"""def getPowerCoef(self):  # en fait pas vraiment power mais |E|**2
+    coefficients = 1
+    # coefficients de reflexion:
+    e = len(self.imagePoints)
+    for i in range(e):
+        wall = self.walls[i]
+        dx = self.Ppoints[i][0] - self.imagePoints[i][0]
+        dy = self.Ppoints[i][1] - self.imagePoints[i][1]
+        d = math.sqrt(dx ** 2 + dy ** 2)
+
+        cosOi = (dx * wall.nX + dy * wall.nY) / d
+        sinOi = (dx * wall.nY - dy * wall.nX) / d
+        cosOt = math.sqrt(1 - sinOi ** 2 / wall.relativePermitivity)
+        if wall.mat == 1:
+            gammaPerp = (self.Z2concrete * cosOi - self.Z1 * cosOt) / (self.Z2concrete * cosOi + self.Z1 * cosOt)
+            u = cmath.exp(complex(-self.alphaMconcrete,
+                                  (
+                                      self.facEpsconcrete) * sinOi ** 2 * self.beta - self.betaMconcrete) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
+            gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
+            coefficients *= abs(gammaM)
+        elif wall.mat == 0:
+            gammaPerp = (self.Z2brick * cosOi - self.Z1 * cosOt) / (self.Z2brick * cosOi + self.Z1 * cosOt)
+            u = cmath.exp(complex(-self.alphaMbrick,
+                                  (self.facEpsbrick) * sinOi ** 2 * self.beta - self.betaMbrick) / cosOt)
+            gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
+            coefficients *= abs(gammaM)
+
+    if not self.imagePoints:
+        dn_carre = (self.receiverX - self.originX) ** 2 + (self.receiverY - self.originY) ** 2
+    else:
+        dn_carre = (self.receiverX - self.imagePoints[-1][0]) ** 2 + (self.receiverY - self.imagePoints[-1][1]) ** 2
+
+    power = coefficients ** 2 / dn_carre
+
+    return power"""

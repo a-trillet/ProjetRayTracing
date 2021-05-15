@@ -17,7 +17,6 @@ class Ray:
         self.receiverY = receiverY
         self.imagePoints = []
         self.walls = []
-        self.reflexionPoints = []
         self.cosOiV = 0
         self.sinOiV = 0
 
@@ -25,7 +24,7 @@ class Ray:
 
 
 
-    """#constant variables :
+    """"#constant variables :
     Z0 = 376.730313
     Ra = 73
     c = 299792458
@@ -33,7 +32,7 @@ class Ray:
     he = -lam/math.pi
     factor = he**2/8/Ra
     Gtx = 1.6977
-    Ptx = 0.1   # [W]"""
+    Ptx = 0.1   # [W]
     omega = 2 * math.pi * 27e9
     c = 299792458
     lam = c / (27 * 10 ** 9)
@@ -52,83 +51,10 @@ class Ray:
 
     Z1 = mu0 * c
     Z2concrete = cmath.sqrt(mu0 / epsCconcrete)
-    Z2brick = cmath.sqrt(mu0 / epsCbrick)
+    Z2brick = cmath.sqrt(mu0 / epsCbrick)"""
 
-    def getPowerCoef(self):  # en fait pas vraiment power mais |E|**2
-        coefficients = 1
-        # coefficients de reflexion:
-        e = len(self.imagePoints)
-        for i in range(e):
-            wall = self.walls[i]
-            dx = self.Ppoints[i][0] - self.imagePoints[i][0]
-            dy = self.Ppoints[i][1] - self.imagePoints[i][1]
-            d = math.sqrt(dx ** 2 + dy ** 2)
-
-            cosOi = (dx * wall.nX + dy * wall.nY) / d
-            sinOi = (dx * wall.nY - dy * wall.nX) / d
-            cosOt = math.sqrt(1 - sinOi ** 2 / wall.relativePermitivity)
-            if wall.mat == 1:
-                gammaPerp = (self.Z2concrete * cosOi - self.Z1 * cosOt) / (self.Z2concrete * cosOi + self.Z1 * cosOt)
-                u = cmath.exp(complex(-self.alphaMconcrete,
-                                      (
-                                          self.facEpsconcrete) * sinOi ** 2 * self.beta - self.betaMconcrete) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
-                coefficients *= abs(gammaM)
-            elif wall.mat == 0:
-                gammaPerp = (self.Z2brick * cosOi - self.Z1 * cosOt) / (self.Z2brick * cosOi + self.Z1 * cosOt)
-                u = cmath.exp(complex(-self.alphaMbrick,
-                                      (self.facEpsbrick) * sinOi ** 2 * self.beta - self.betaMbrick) / cosOt)
-                gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
-                coefficients *= abs(gammaM)
-
-        if not self.imagePoints:
-            dn_carre = (self.receiverX - self.originX) ** 2 + (self.receiverY - self.originY) ** 2
-        else:
-            dn_carre = (self.receiverX - self.imagePoints[-1][0]) ** 2 + (self.receiverY - self.imagePoints[-1][1]) ** 2
-
-        power = coefficients ** 2 / dn_carre
-
-        return power
-
-    def getPower(self):  # en fait pas vraiment power mais |E|**2
-        coefficients = 1
-        # coefficients de reflexion:
-        e = len(self.imagePoints)
-        for i in range(e):
-            wall = self.walls[i]
-            dx = self.Ppoints[i][0] - self.imagePoints[i][0]
-            dy = self.Ppoints[i][1] - self.imagePoints[i][1]
-            d = math.sqrt(dx ** 2 + dy ** 2)
-
-            cosOi = (dx * wall.nX + dy * wall.nY) / d
-            sinOi = (dx * wall.nY - dy * wall.nX) / d
-            cosOt = math.sqrt(1 - sinOi ** 2 / wall.relativePermitivity)
-            if wall.mat == 1:
-                gammaPerp = (self.Z2concrete * cosOi - self.Z1 * cosOt) / (self.Z2concrete * cosOi + self.Z1 * cosOt)
-                u = cmath.exp(complex(-self.alphaMconcrete,
-                                      (
-                                          self.facEpsconcrete) * sinOi ** 2 * self.beta - self.betaMconcrete) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
-                coefficients *= abs(gammaM)
-            elif wall.mat == 0:
-                gammaPerp = (self.Z2brick * cosOi - self.Z1 * cosOt) / (self.Z2brick * cosOi + self.Z1 * cosOt)
-                u = cmath.exp(complex(-self.alphaMbrick,
-                                      (self.facEpsbrick) * sinOi ** 2 * self.beta - self.betaMbrick) / cosOt)
-                gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
-                coefficients *= abs(gammaM)
-
-        if not self.imagePoints:
-            dn_carre = (self.receiverX - self.originX) ** 2 + (self.receiverY - self.originY) ** 2
-        else:
-            dn_carre = (self.receiverX - self.imagePoints[-1][0]) ** 2 + (self.receiverY - self.imagePoints[-1][1]) ** 2
-
-        power = coefficients ** 2 / dn_carre
-
-        return power
 
     def getTcoef(self, wallsH, wallsV):
-
-
         facEpsbrick = 0.4662524041201569
         facEpsconcrete = 0.4472135954999579
         Tcoef_carre = 1
@@ -165,20 +91,17 @@ class Ray:
             dy = Py2 - Py1
             d = math.sqrt(dx ** 2 + dy ** 2)
             # Walls H
-            found = 0
             TmB = 0
             TmC = 0
             cosOi = -dy / d  # NOTE : valeurs plus ou moins calculées dans # getPower
             sinOi = dx / d  # faute expres pour simplifier, cos, sin  corrigés par la suite
-            cosOtC = math.sqrt(1 - sinOi ** 2 / 5)
-            cosOtB = math.sqrt(1 - sinOi ** 2 / 4.6)
             for wall in wallsH:  # n= (0,-1)
                 if Py1 < wall.origin[1] < Py2 or Py1 > wall.origin[1] > Py2:
-                    found = 1
                     proj = (wall.origin[1] - Py2) * sinOi / cosOi
                     if wall.origin[0] < Px2 - proj < wall.origin[0] + wall.length:
                         if wall.mat == 1:
                             if TmC == 0:
+                                cosOtC = math.sqrt(1 - sinOi ** 2 / 5)
                                 gammaPerp = (Z2concrete * abs(cosOi) - Z1 * cosOtC) / (Z2concrete * abs(cosOi) + Z1 * cosOtC)
                                 u = cmath.exp(complex(-alphaMconcrete,
                                                       (
@@ -188,6 +111,7 @@ class Ray:
                             Tcoef_carre *= TmC ** 2
                         elif wall.mat == 0:
                             if TmB == 0:
+                                cosOtB = math.sqrt(1 - sinOi ** 2 / 4.6)
                                 gammaPerp = (Z2brick * abs(cosOi) - Z1 * cosOtB) / (Z2brick * abs(cosOi) + Z1 * cosOtB)
                                 u = cmath.exp(complex(-alphaMbrick,
                                                       (
@@ -195,29 +119,27 @@ class Ray:
                                 TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMbrick/2/cosOtB, -betaMbrick / 2 /cosOtB)) / (
                                             1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmB ** 2
-                elif found == 1:
+                elif wall.origin[1] > Py1 and wall.origin[1] > Py2:
                     break
             # Walls V
-            found = 0
             TmB = 0
             TmC = 0
             cosOi = dx / d  # NOTE : valeurs plus ou moins calculées dans # getPower
             sinOi = dy / d  # faute expres pour simplifier, cos, sin  corrigés par la suite
-            cosOtC = math.sqrt(1 - sinOi ** 2 / 5)
-            cosOtB = math.sqrt(1 - sinOi ** 2 / 4.6)
             for wall in wallsV:  # n= (1,0)
                 if Px1 < wall.origin[0] < Px2 or Px1 > wall.origin[0] > Px2:
-                    found = 1
                     proj = (Px2 - wall.origin[0]) * sinOi / cosOi
                     if wall.origin[1] <= Py2 - proj <= wall.origin[1] + wall.length:
                         if wall.mat == 1:
                             if TmC == 0:
+                                cosOtC = math.sqrt(1 - sinOi ** 2 / 5)
                                 gammaPerp = (Z2concrete * abs(cosOi) - Z1 * cosOtC) / (Z2concrete * abs(cosOi) + Z1 * cosOtC)
                                 u = cmath.exp(complex(-alphaMconcrete,(facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOtC)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
                                 TmC = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMconcrete/2/cosOtC, -betaMconcrete / 2 / cosOtC)) / (1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmC ** 2
                         elif wall.mat == 0:
                             if TmB == 0:
+                                cosOtB = math.sqrt(1 - sinOi ** 2 / 4.6)
                                 gammaPerp = (Z2brick * abs(cosOi) - Z1 * cosOtB) / (Z2brick * abs(cosOi) + Z1 * cosOtB)
                                 u = cmath.exp(complex(-alphaMbrick,
                                                       (
@@ -225,6 +147,6 @@ class Ray:
                                 TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMbrick/2/cosOtB, -betaMbrick / 2 /cosOtB)) / (
                                         1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmB ** 2
-                elif found == 1:
+                elif wall.origin[0] > Px1 and wall.origin[0] > Px2:
                     break
         return Tcoef_carre  # NOTE: carré ou pas à voir
