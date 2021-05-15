@@ -104,8 +104,8 @@ def display(map_style, rays):
     """
     a = 200
     b = 110
-    x = np.linspace(-5, a + 1 + 5, a + 10)  # initialisation des axes et points
-    y = np.linspace(-5, b + 1 + 5, b + 10)
+    x = np.linspace(-5, a + 4, a + 10)  # initialisation des axes et points
+    y = np.linspace(-5, b + 4, b + 10)
     X, Y = np.meshgrid(x, y)
     plt.figure(figsize=(19, 9))
 
