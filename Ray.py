@@ -183,7 +183,7 @@ class Ray:
                                 u = cmath.exp(complex(-alphaMconcrete,
                                                       (
                                                           facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOtC)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                                TmC = abs((1 - gammaPerp ** 2) * cmath.exp(complex(0, -betaMconcrete / 2 / cosOtC)) / (
+                                TmC = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMconcrete/2/cosOtC, -betaMconcrete / 2 / cosOtC)) / (
                                             1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmC ** 2
                         elif wall.mat == 0:
@@ -192,7 +192,7 @@ class Ray:
                                 u = cmath.exp(complex(-alphaMbrick,
                                                       (
                                                           facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOtB)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                                TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(0, -betaMconcrete / 2 / cosOtB)) / (
+                                TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMbrick/2/cosOtB, -betaMbrick / 2 /cosOtB)) / (
                                             1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmB ** 2
                 elif found == 1:
@@ -214,7 +214,7 @@ class Ray:
                             if TmC == 0:
                                 gammaPerp = (Z2concrete * abs(cosOi) - Z1 * cosOtC) / (Z2concrete * abs(cosOi) + Z1 * cosOtC)
                                 u = cmath.exp(complex(-alphaMconcrete,(facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOtC)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                                TmC = abs((1 - gammaPerp ** 2) * cmath.exp(complex(0, -betaMconcrete / 2 / cosOtC)) / (1 - gammaPerp ** 2 * u))
+                                TmC = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMconcrete/2/cosOtC, -betaMconcrete / 2 / cosOtC)) / (1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmC ** 2
                         elif wall.mat == 0:
                             if TmB == 0:
@@ -222,7 +222,7 @@ class Ray:
                                 u = cmath.exp(complex(-alphaMbrick,
                                                       (
                                                           facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOtB)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                                TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(0, -betaMconcrete / 2 / cosOtB)) / (
+                                TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMbrick/2/cosOtB, -betaMbrick / 2 /cosOtB)) / (
                                         1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmB ** 2
                 elif found == 1:
