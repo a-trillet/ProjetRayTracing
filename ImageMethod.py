@@ -143,7 +143,7 @@ def find_Point(walls, i, receiverX, receiverY, originX, originY, imagePoints):
 
                     PSsn = s[0] * n[0] + s[1] * n[1]
                     PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                    if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= walls[i].length:
+                    if np.sign(PSsn) == np.sign(PSRXn) and 0 < t < walls[i].length:
                         P1 = [x0[0] + t * u[0], x0[1] + t * u[1]]
                         return P1
                     else:
@@ -161,7 +161,7 @@ def find_Point(walls, i, receiverX, receiverY, originX, originY, imagePoints):
 
                     PSsn = s[0] * n[0] + s[1] * n[1]
                     PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                    if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= walls[i].length:
+                    if np.sign(PSsn) == np.sign(PSRXn) and 0 < t < walls[i].length:
                         P3 = [x0[0] + t * u[0], x0[1] + t * u[1]]
 
                         RX = P3
@@ -178,7 +178,7 @@ def find_Point(walls, i, receiverX, receiverY, originX, originY, imagePoints):
                             t = (d[1] * (TXp[0] - x0[0]) - d[0] * (TXp[1] - x0[1])) / dnt
                             PSsn = s[0] * n[0] + s[1] * n[1]
                             PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                            if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= walls[i - 1].length:
+                            if np.sign(PSsn) == np.sign(PSRXn) and 0 < t < walls[i - 1].length:
                                 P2 = [x0[0] + t * u[0], x0[1] + t * u[1]]
                                 return P2, P3
                             else:
@@ -201,7 +201,7 @@ def find_Point(walls, i, receiverX, receiverY, originX, originY, imagePoints):
 
                     PSsn = s[0] * n[0] + s[1] * n[1]
                     PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                    if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= walls[i].length:
+                    if np.sign(PSsn) == np.sign(PSRXn) and 0 < t < walls[i].length:
                         P6 = [x0[0] + t * u[0], x0[1] + t * u[1]]
 
                         RX = P6
@@ -219,7 +219,7 @@ def find_Point(walls, i, receiverX, receiverY, originX, originY, imagePoints):
 
                             PSsn = s[0] * n[0] + s[1] * n[1]
                             PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                            if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= walls[i - 1].length:
+                            if np.sign(PSsn) == np.sign(PSRXn) and 0 < t < walls[i - 1].length:
                                 P5 = [x0[0] + t * u[0], x0[1] + t * u[1]]
 
                                 RX = P5
@@ -237,7 +237,7 @@ def find_Point(walls, i, receiverX, receiverY, originX, originY, imagePoints):
 
                                     PSsn = s[0] * n[0] + s[1] * n[1]
                                     PSRXn = (RX[0] - x0[0]) * n[0] + (RX[1] - x0[1]) * n[1]
-                                    if np.sign(PSsn) == np.sign(PSRXn) and 0 <= t <= walls[i - 2].length:
+                                    if np.sign(PSsn) == np.sign(PSRXn) and 0 < t < walls[i - 2].length:
                                         P4 = [x0[0] + t * u[0], x0[1] + t * u[1]]
                                         return P4, P5, P6
                                     else:

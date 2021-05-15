@@ -176,7 +176,7 @@ class Ray:
                 if Py1 < wall.origin[1] < Py2 or Py1 > wall.origin[1] > Py2:
                     found = 1
                     proj = (wall.origin[1] - Py2) * sinOi / cosOi
-                    if wall.origin[0] <= Px2 - proj <= wall.origin[0] + wall.length:
+                    if wall.origin[0] < Px2 - proj < wall.origin[0] + wall.length:
                         if wall.mat == 1:
                             if TmC == 0:
                                 gammaPerp = (Z2concrete * abs(cosOi) - Z1 * cosOtC) / (Z2concrete * abs(cosOi) + Z1 * cosOtC)

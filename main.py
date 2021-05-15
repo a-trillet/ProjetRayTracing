@@ -158,11 +158,11 @@ def main():
     init_time = datetime.now()
     pool = mp.Pool(6)
 
-    MAPstyle = 2  # 1(corner) or 2(MET)
+    MAPstyle = 1  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 10   # m^2
+    precision = 1   # m^2
     antennas = [[100, 45]]
     for antenna in antennas:
         for x in range(200 // precision):
@@ -181,6 +181,7 @@ def main():
     print("Execution time: ", (end_time - init_time))
     dp.displayDPM(MAPstyle, results, antennas)
     dp.displayDebit(MAPstyle, results, antennas)
+
 
 
 """MAPstyle = 2  # 1(corner) or 2(MET)

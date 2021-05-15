@@ -11,6 +11,8 @@ def displayDPM(MAPstyle, results, antennas):
         plt.legend()
         #plt.savefig("figure.png")
         """
+    with open('test.npy', 'wb') as f:
+        np.save(f, results)
     a = 200
     b = 110
     x = np.linspace(-5, a + 1 + 5, a + 10)  # initialisation des axes et points
