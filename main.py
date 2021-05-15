@@ -100,9 +100,9 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb, ray):
                                   facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
         coef *= abs(gammaM) ** (2 * nbVb)
-    #print(nbVb, nbHc, nbVc, nbHb, coef, dx, dy)
+    # print(nbVb, nbHc, nbVc, nbHb, coef, dx, dy)
     E = coef / d ** 2
-    #E=1
+    # E=1
     return E
 
 
@@ -143,45 +143,46 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
                         nbWallsHb[i] += 1
         else:
             dx[i], dy[i] = r.receiverX - r.originX, r.receiverY - r.originY
-            #print('okok')
+            # print('okok')
 
         En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i], r)
         En_carre[i] *= r.getTcoef(wallsh, wallsv)
-        a=1
+        a = 1
     for e in En_carre:
         power += e
     power *= factor * 60 * Gtx * Ptx
     return x, y, power, precision
 
 
-def main():
+def main(antenna, i):
     init_time = datetime.now()
     pool = mp.Pool(6)
-
+    global results
     MAPstyle = 1  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 1   # m^2
-    antennas = [[100, 45]]
-    for antenna in antennas:
-        for x in range(200 // precision):
-            for y in range(110 // precision):
-                if [x * precision + precision // 2, y * precision + precision // 2] == antenna:
-                    #results[x * precision + precision // 2, y * precision + precision // 2] += 0.1
-                    a=1
-                else:
-                    pool.apply_async(calculatePower,
-                                     args=(x * precision, y * precision, wallsh, wallsv, precision, antenna),
-                                     callback=collect_results)
-        print("c'est : ", calculatePower(190, 90, wallsh, wallsv, precision, antenna))
+    precision = 1  # m^2
+    for x in range(200 // precision):
+        for y in range(110 // precision):
+            if [x * precision + precision // 2, y * precision + precision // 2] == antenna:
+                # results[x * precision + precision // 2, y * precision + precision // 2] += 0.1
+                a = 1
+            else:
+                pool.apply_async(calculatePower,
+                                 args=(x * precision, y * precision, wallsh, wallsv, precision, antenna),
+                                 callback=collect_results)
+    print("c'est : ", calculatePower(190, 90, wallsh, wallsv, precision, antenna))
     pool.close()
     pool.join()
     end_time = datetime.now()
     print("Execution time: ", (end_time - init_time))
-    dp.displayDPM(MAPstyle, results, antennas)
-    dp.displayDebit(MAPstyle, results, antennas)
-
+    #dp.displayDPM(MAPstyle, results, antennas)
+    #dp.displayDebit(MAPstyle, results, antennas)
+    w = str(i)
+    with open('antenna' + w, 'wb') as f:
+        np.save(f, results)
+    f.close()
 
 
 """MAPstyle = 2  # 1(corner) or 2(MET)
@@ -248,8 +249,13 @@ dp.display(MAPstyle, rays)"""
 
 
 if __name__ == '__main__':
+    antennas = [[100, 45], [0, 0], [175, 80]]
     # freeze_support() here if program needs to be frozen
-    main()  # execute this only when run directly, not when imported!
+    for i in range(len(antennas)):
+        results = np.zeros((120, 210))
+        main(antennas[i], i)  # execute this only when run directly, not when imported!
+        results = np.zeros((120, 210))
+
 
 """7.288447357455732e-09
 7.288447357455732e-09

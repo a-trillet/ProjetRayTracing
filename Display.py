@@ -4,15 +4,13 @@ import random
 import Map
 
 
-def displayDPM(MAPstyle, results, antennas):
+def displayDPM(MAPstyle, results, antenna):
     """
         plt.plot(x, y, label="quadratique")
         plt.plot(x, x ** 3, label="cubique")
         plt.legend()
         #plt.savefig("figure.png")
         """
-    with open('test.npy', 'wb') as f:
-        np.save(f, results)
     a = 200
     b = 110
     x = np.linspace(-5, a + 1 + 5, a + 10)  # initialisation des axes et points
@@ -38,8 +36,7 @@ def displayDPM(MAPstyle, results, antennas):
         elif i.mat == 1:
             plt.plot(x1, y1, c="gray", lw=3)
 
-    for antenna in antennas:
-        plt.scatter(antenna[0], antenna[1], c="black")  # points émetteurs
+    #plt.scatter(antenna[0], antenna[1], c="black")  # points émetteurs
 
     plt.title("Puissance en [dBm]")
     plt.xlabel("axe x")
