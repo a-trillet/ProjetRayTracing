@@ -15,7 +15,11 @@ dicoAntenna = {0: [100, 45],
                11: [38, 70],
                12: [14, 70],
                13: [164, 75],
-               14: [151, 67]}
+               14: [151, 67],
+               15: [138, 72],
+               16: [151, 60],
+               17: [180, 60],
+               18: [28, 28]}
 nbAntenne = len(dicoAntenna)
 
 allresult = []
@@ -23,6 +27,5 @@ for i in range(nbAntenne):
     with open("saves/antenna"+str(i), 'rb') as f:
         allresult.append(np.load(f))
     f.close()
-
 Display.displayDPM(2, allresult, dicoAntenna)
 Display.displayDebit(2, allresult, dicoAntenna)
