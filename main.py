@@ -129,8 +129,6 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
     Ptx = 0.1  # [W]
     for i in range(len(rays)):
         r = rays[i]
-        if [ray.receiverX, ray.receiverY] == [100, 55]:
-            a=1
         if len(r.imagePoints) != 0:
             dx[i], dy[i] = r.receiverX - r.imagePoints[-1][0], r.receiverY - r.imagePoints[-1][1]
             for wall in r.walls:
