@@ -38,10 +38,11 @@ facEpsconcrete = math.sqrt(1 / 5)
 epsCconcrete = complex(5 * eps0, -(0.014 / omega))
 epsCbrick = complex(4.6 * eps0, -(0.02 / omega))
 
-alphaMconcrete = omega * math.sqrt(5 / 2 / c) * math.sqrt((math.sqrt(1 + (0.014 / omega / 5 / 8.854e-12) ** 2) - 1))
-alphaMbrick = omega * math.sqrt(4.6 / c / 2) * math.sqrt((math.sqrt(1 + (0.02 / omega / 4.6 / 8.854e-12) ** 2) - 1))
-betaMconcrete = omega * math.sqrt(5 / c / 2) * math.sqrt((1 + math.sqrt(1 + (0.014 / omega / 5 / 8.854e-12) ** 2) + 1))
-betaMbrick = omega * math.sqrt(4.6 / c / 2) * math.sqrt((1 + math.sqrt(1 + (0.02 / omega / 4.6 / 8.854e-12) ** 2) + 1))
+alphaMconcrete = omega * math.sqrt(5 / 2) * math.sqrt(math.sqrt(1 + (0.014 / (omega * 5 * eps0)) ** 2) - 1) / c
+alphaMbrick = omega * math.sqrt(4.6 / 2) * math.sqrt(math.sqrt(1 + (0.02 / (omega * 4.6 * eps0)) ** 2) - 1) / c
+betaMconcrete = omega * math.sqrt(5 / 2) * math.sqrt(math.sqrt(1 + (0.014 / (omega * 5 * eps0)) ** 2) + 1) / c
+betaMbrick = omega * math.sqrt(4.6 / 2) * math.sqrt(math.sqrt(1 + (0.02 / (omega * 4.6 * eps0)) ** 2) + 1) / c
+
 Z1 = mu0 * c
 Z2concrete = cmath.sqrt(mu0 / epsCconcrete)
 Z2brick = cmath.sqrt(mu0 / epsCbrick)
@@ -49,7 +50,7 @@ Z2brick = cmath.sqrt(mu0 / epsCbrick)
 
 # @guvectorize('complex64(float32, float32, int8, int8, int8, int8)', target='cuda')
 # @numba.cuda.jit('void(float32, float32, int8, int8, int8, int8)')
-def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb, ray):
+def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
     coef = 1
     alphaMconcrete = 1.1793519138628281
     alphaMbrick = 1.756512304000713
@@ -143,7 +144,7 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
                         nbWallsHb[i] += 1
         else:
             dx[i], dy[i] = r.receiverX - r.originX, r.receiverY - r.originY
-        En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i], r)
+        En_carre[i] = reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i])
         En_carre[i] *= r.getTcoef(wallsh, wallsv)
     for e in En_carre:
         power += e
@@ -155,11 +156,11 @@ def main(antenna, i):
     init_time = datetime.now()
     pool = mp.Pool(8)
     global results
-    MAPstyle = 1  # 1(corner) or 2(MET)
+    MAPstyle = 2  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 1  # m^2
+    precision = 10  # m^2
     for x in range(200 // precision):
         for y in range(110 // precision):
             if [x * precision + precision // 2, y * precision + precision // 2] == antenna:
@@ -168,19 +169,23 @@ def main(antenna, i):
                 pool.apply_async(calculatePower,
                                  args=(x * precision, y * precision, wallsh, wallsv, precision, antenna),
                                  callback=collect_results)
-    print("c'est : ", calculatePower(190, 90, wallsh, wallsv, precision, antenna))
+    print("c'est : ", calculatePower(140, 40, wallsh, wallsv, precision, antenna))
     pool.close()
     pool.join()
+    Display.displayDPM(MAPstyle, results)
+    Display.displayDebit(MAPstyle, results)
     end_time = datetime.now()
     print("Execution time: ", (end_time - init_time))
-    w = str(i)
+    """
+    w = str(6)
     with open('antenna' + w, 'wb') as f:
         np.save(f, results)
-    f.close()
+    f.close()"""
+
 
 if __name__ == '__main__':
-    #antennas = [[40, 20], [100, 90], [170, 20]]
-    antennas = [[170, 20]]
+    # antennas = [[40, 20], [100, 90], [170, 20]]
+    antennas = [[100, 45]]
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((120, 210))

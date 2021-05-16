@@ -22,38 +22,6 @@ class Ray:
 
         self.Ppoints = []
 
-
-
-    """"#constant variables :
-    Z0 = 376.730313
-    Ra = 73
-    c = 299792458
-    lam = c/(27 * 10**9)
-    he = -lam/math.pi
-    factor = he**2/8/Ra
-    Gtx = 1.6977
-    Ptx = 0.1   # [W]
-    omega = 2 * math.pi * 27e9
-    c = 299792458
-    lam = c / (27 * 10 ** 9)
-    beta = 2 * math.pi / lam
-    mu0 = 4e-7 * math.pi
-    eps0 = 1 / (mu0 * c ** 2)
-    facEpsbrick = math.sqrt(1 / 4.6)
-    facEpsconcrete = math.sqrt(1 / 5)
-    epsCconcrete = complex(5 * eps0, -(0.014 / omega))
-    epsCbrick = complex(4.6 * eps0, -(0.02 / omega))
-
-    alphaMconcrete = omega * math.sqrt(mu0 * eps0 * 5/2) * math.sqrt(math.sqrt(1 + (0.014 / (omega * 5 * eps0)) ** 2) - 1)
-    alphaMbrick = omega * math.sqrt(mu0 * eps0 * 4.6/2) * math.sqrt(math.sqrt(1 + (0.02 / (omega * 4.6 * eps0)) ** 2) - 1)
-    betaMconcrete = omega * math.sqrt(mu0 * eps0 * 5/2) * math.sqrt(math.sqrt(1 + (0.014 / (omega * 5 * eps0)) ** 2) + 1)
-    betaMbrick = omega * math.sqrt(mu0 * eps0 * 4.6/2) * math.sqrt(math.sqrt(1 + (0.02 / (omega * 4.6 * eps0)) ** 2) + 1)
-
-    Z1 = mu0 * c
-    Z2concrete = cmath.sqrt(mu0 / epsCconcrete)
-    Z2brick = cmath.sqrt(mu0 / epsCbrick)"""
-
-
     def getTcoef(self, wallsH, wallsV):
         facEpsbrick = 0.4662524041201569
         facEpsconcrete = 0.4472135954999579
@@ -106,7 +74,7 @@ class Ray:
                                 u = cmath.exp(complex(-alphaMconcrete,
                                                       (
                                                           facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOtC)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                                TmC = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMconcrete/2/cosOtC, -betaMconcrete / 2 / cosOtC)) / (
+                                TmC = abs((1 - gammaPerp ** 2) * math.exp(-alphaMconcrete/2/cosOtC) / (
                                             1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmC ** 2
                         elif wall.mat == 0:
@@ -116,7 +84,7 @@ class Ray:
                                 u = cmath.exp(complex(-alphaMbrick,
                                                       (
                                                           facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOtB)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                                TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMbrick/2/cosOtB, -betaMbrick / 2 /cosOtB)) / (
+                                TmB = abs((1 - gammaPerp ** 2) * math.exp(-alphaMbrick/2/cosOtB) / (
                                             1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmB ** 2
                 elif wall.origin[1] > Py1 and wall.origin[1] > Py2:
@@ -135,7 +103,7 @@ class Ray:
                                 cosOtC = math.sqrt(1 - sinOi ** 2 / 5)
                                 gammaPerp = (Z2concrete * abs(cosOi) - Z1 * cosOtC) / (Z2concrete * abs(cosOi) + Z1 * cosOtC)
                                 u = cmath.exp(complex(-alphaMconcrete,(facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOtC)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                                TmC = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMconcrete/2/cosOtC, -betaMconcrete / 2 / cosOtC)) / (1 - gammaPerp ** 2 * u))
+                                TmC = abs((1 - gammaPerp ** 2) * math.exp(-alphaMconcrete/2/cosOtC) / (1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmC ** 2
                         elif wall.mat == 0:
                             if TmB == 0:
@@ -144,7 +112,7 @@ class Ray:
                                 u = cmath.exp(complex(-alphaMbrick,
                                                       (
                                                           facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOtB)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
-                                TmB = abs((1 - gammaPerp ** 2) * cmath.exp(complex(-alphaMbrick/2/cosOtB, -betaMbrick / 2 /cosOtB)) / (
+                                TmB = abs((1 - gammaPerp ** 2) * math.exp(-alphaMbrick/2/cosOtB) / (
                                         1 - gammaPerp ** 2 * u))
                             Tcoef_carre *= TmB ** 2
                 elif wall.origin[0] > Px1 and wall.origin[0] > Px2:
