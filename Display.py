@@ -33,7 +33,7 @@ def displayDPM(MAPstyle, results,dicoAntenna):
     X, Y = np.meshgrid(x, y)
     fig = plt.figure(figsize=(19, 9))
     graphe = fig.add_subplot()
-    plt.title("Débit binaire en [Mb/s]")
+    plt.title("Puissance en  [dBm]")
     plt.xlabel("axe x")
     plt.ylabel("axe y")
 
@@ -63,7 +63,7 @@ def displayDPM(MAPstyle, results,dicoAntenna):
         labels = []
         activated = [True]
         for i in range(len(dicoAntenna)):
-            labels.append("Antenne " + str(i + 1) + ": " + str(dicoAntenna[i]))
+            labels.append("Antenne " + str(i) + ": " + str(dicoAntenna[i]))
             if i != 0:
                 activated.append(False)
         axCheckButton = plt.axes([0.83, 0.2, 0.15, 0.7])
@@ -90,7 +90,7 @@ def displayDPM(MAPstyle, results,dicoAntenna):
                         result[i][j] = 10 ** (-6)
             Z = 10 * np.log10(1000 * result)
             graphe.clear()
-            graphe.set_title("Débit binaire en [Mb/s]")
+            graphe.set_title("Puissance en  [dBm]")
             graphe.set_xlabel("axe x")
             graphe.set_ylabel("axe y")
             graphe.pcolor(X, Y, Z, cmap=plt.cm.turbo, shading='nearest')
@@ -160,7 +160,7 @@ def displayDebit(MAPstyle, results, dicoAntenna):
     labels = []
     activated = [True]
     for i in range(len(dicoAntenna)):
-        labels.append("Antenne "+str(i+1)+ ": " +str(dicoAntenna[i]))
+        labels.append("Antenne "+str(i)+ ": " +str(dicoAntenna[i]))
         if i != 0:
             activated .append(False)
     axCheckButton = plt.axes([0.83, 0.2, 0.15, 0.7])

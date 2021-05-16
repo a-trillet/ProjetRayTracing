@@ -103,7 +103,7 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
         coef *= abs(gammaM) ** (2 * nbVb)
     E = coef / d ** 2
-    # E=1
+    #E=1
     return E
 
 
@@ -129,6 +129,8 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
     Ptx = 0.1  # [W]
     for i in range(len(rays)):
         r = rays[i]
+        if [ray.receiverX, ray.receiverY] == [100, 55]:
+            a=1
         if len(r.imagePoints) != 0:
             dx[i], dy[i] = r.receiverX - r.imagePoints[-1][0], r.receiverY - r.imagePoints[-1][1]
             for wall in r.walls:
@@ -154,13 +156,13 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
 
 def main(antenna, i):
     init_time = datetime.now()
-    pool = mp.Pool(8)
+    pool = mp.Pool(12)
     global results
     MAPstyle = 2  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
-    precision = 10  # m^2
+    precision = 1  # m^2
     for x in range(200 // precision):
         for y in range(110 // precision):
             if [x * precision + precision // 2, y * precision + precision // 2] == antenna:
@@ -172,20 +174,28 @@ def main(antenna, i):
     print("c'est : ", calculatePower(140, 40, wallsh, wallsv, precision, antenna))
     pool.close()
     pool.join()
-    Display.displayDPM(MAPstyle, results)
-    Display.displayDebit(MAPstyle, results)
+    #Display.displayDPM(MAPstyle, results)
+    #Display.displayDebit(MAPstyle, results)
     end_time = datetime.now()
     print("Execution time: ", (end_time - init_time))
-    """
-    w = str(6)
+
+    w = str(i+15)
+    """dicoAntenna = {0: [100, 45],
+                   1: [36, 49],
+                   2: [170, 34],
+                   3: [40, 20],
+                   4: [100, 90],
+                   5: [79, 31],
+                   6: [170, 20]}
+    dp.displayDPM(1, [results], dicoAntenna)"""
     with open('antenna' + w, 'wb') as f:
         np.save(f, results)
-    f.close()"""
+    f.close()
 
 
 if __name__ == '__main__':
     # antennas = [[40, 20], [100, 90], [170, 20]]
-    antennas = [[100, 45]]
+    antennas = [[28, 28]]
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((120, 210))

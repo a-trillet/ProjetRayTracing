@@ -30,7 +30,7 @@ def getWallsV(walls):
 def getWalls(mapType):
     walls = []
     if mapType == 1:
-        walls.append(Wall(130, 30, 0, 50, "concrete"))
+        walls.append(Wall(130, 30, 0, 50, "brick"))
         walls.append(Wall(50, 80, 80, 0, "concrete"))
         #walls.append(Wall(0, 10, 10, 0, "brick"))
         #walls.append(Wall(100, -5, 0, 100, 'brick'))
