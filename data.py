@@ -1,16 +1,20 @@
 import numpy as np
 import main
 import Display
+dicoAntenna = {0: [100, 45],
+               1: [36, 49],
+               2: [170, 34],
+               3: [40, 20],
+               4: [100, 90],
+               5: [79, 31],
+               6: [170, 20]}
+nbAntenne = len(dicoAntenna)
 
-with open("saves/antenna3", 'rb') as f:
-    a = np.load(f)
-# Display.displayDPM(1, a, [[100, 45]])
-f.close()
+allresult = []
+for i in range(nbAntenne):
+    with open("saves/antenna"+str(i), 'rb') as f:
+        allresult.append(np.load(f))
+    f.close()
 
-with open("saves/antenna4", 'rb') as f:
-    b = np.load(f)
-# Display.displayDPM(1, b)
-f.close()
-
-Display.displayDPM(2, a+b)
-Display.displayDebit(2, a+b)
+Display.displayDPM(2, allresult, dicoAntenna)
+Display.displayDebit(2, allresult, dicoAntenna)

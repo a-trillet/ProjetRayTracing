@@ -155,7 +155,7 @@ def main(antenna, i):
     init_time = datetime.now()
     pool = mp.Pool(8)
     global results
-    MAPstyle = 2  # 1(corner) or 2(MET)
+    MAPstyle = 1  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
@@ -173,7 +173,7 @@ def main(antenna, i):
     pool.join()
     end_time = datetime.now()
     print("Execution time: ", (end_time - init_time))
-    w = str(6)
+    w = str(i)
     with open('antenna' + w, 'wb') as f:
         np.save(f, results)
     f.close()
