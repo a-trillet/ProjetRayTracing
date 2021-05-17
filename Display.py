@@ -62,7 +62,7 @@ def displayDPM(MAPstyle, results, dicoAntenna):
     labels = []
     activated = [True]
     for i in range(len(dicoAntenna)):
-        labels.append("Antenne " + str(i) + ": " + str(dicoAntenna[i]))
+        labels.append("Antenne " + str(i) + " : " + str(dicoAntenna[i]))
         if i != 0:
             activated.append(False)
     axCheckButton = plt.axes([0.83, 0.05, 0.15, 0.9])
@@ -72,7 +72,7 @@ def displayDPM(MAPstyle, results, dicoAntenna):
     [ll.set_markeredgewidth(0.5) for l in chxbox.lines for ll in l]
 
     def set_visible(label):
-        index = labels.index(label)
+        index = int(label.split(" ")[1])
         somme = np.zeros((120, 210))
         if index not in listAntenna:
             listAntenna.append(index)
@@ -119,7 +119,6 @@ def displayDebit(MAPstyle, results, dicoAntenna):
 
     def getDico():
         return dicoAntenna
-
     for antenna in listAntenna:
         somme += results[antenna]
         displayAntenna.append(dicoAntenna[0])
@@ -163,7 +162,7 @@ def displayDebit(MAPstyle, results, dicoAntenna):
     labels = []
     activated = [True]
     for i in range(len(dicoAntenna)):
-        labels.append("Antenne " + str(i) + ": " + str(dicoAntenna[i]))
+        labels.append("Antenne " + str(i) + " : " + str(dicoAntenna[i]))
         if i != 0:
             activated.append(False)
     axCheckButton = plt.axes([0.83, 0.05, 0.15, 0.9])
