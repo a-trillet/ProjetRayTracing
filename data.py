@@ -37,10 +37,13 @@ dicoAntenna = {0: [100, 45],
                33: [36, 32],
                34: [69, 28],
                35: [69, 41],
+               36: [72, 13],
+               37: [170, 50],
+               38: [125, 55]
                }
 nbAntenne = len(dicoAntenna)
 
-allresult = [[100, 20]]
+allresult = []
 for i in range(nbAntenne):
     with open("saves/antenna"+str(i), 'rb') as f:
         allresult.append(np.load(f))
