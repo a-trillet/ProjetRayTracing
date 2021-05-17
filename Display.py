@@ -65,7 +65,7 @@ def displayDPM(MAPstyle, results, dicoAntenna):
         labels.append("Antenne " + str(i) + " : " + str(dicoAntenna[i]))
         if i != 0:
             activated.append(False)
-    axCheckButton = plt.axes([0.83, 0.05, 0.15, 0.9])
+    axCheckButton = plt.axes([0.83, -0.1, 0.15, 0.95])
     chxbox = CheckButtons(axCheckButton, labels, activated)
     for r in chxbox.rectangles:
         r.set_width(0.05)
