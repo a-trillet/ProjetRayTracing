@@ -177,7 +177,7 @@ def main(antenna, i):
     end_time = datetime.now()
     print("Execution time: ", (end_time - init_time))
 
-    w = str(i+15)
+    w = str(i+29)
     """dicoAntenna = {0: [100, 45],
                    1: [36, 49],
                    2: [170, 34],
@@ -193,7 +193,7 @@ def main(antenna, i):
 
 if __name__ == '__main__':
     # antennas = [[40, 20], [100, 90], [170, 20]]
-    antennas = [[28, 28]]
+    antennas = [[25, 62], [37, 52], [80, 45], [90, 35], [36, 32], [69, 28], [69, 41]]
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((120, 210))
