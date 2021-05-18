@@ -1,11 +1,9 @@
 import copy
-from datetime import datetime
-
-import Map
 import numpy as np
-# from main import walls
-from Ray import Ray
 
+"""Implémentation de la méthode des images(fonction getRayImage) ainsi que le 
+calcul du ou des point d'intersection entre le mur et le rayon (fonction findPoint)
+Note: Un rayon n'es créé que si il est valable"""
 
 def getRayImage(originX, originY, wallsh, wallsv, oldRay):
     rays = [oldRay]
@@ -75,6 +73,8 @@ def getRayImage(originX, originY, wallsh, wallsv, oldRay):
                                                                 rays.append(ray)
                                                             imagePoints.remove(imagePoints[2])
                                         imagePoints.remove(imagePoints[1])
+    for r in rays:
+        print(r.Ppoints)
     return rays
 
 

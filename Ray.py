@@ -1,13 +1,6 @@
 import cmath
-
-import inline as inline
-import pylab
-
 from Wall import *
-import numpy as np
-import pylab
-import inline
-
+"""objet Rayon, et une fonction qui calcule les coefficien de transmission"""
 
 class Ray:
     def __init__(self, originX, originY, receiverX, receiverY):
@@ -117,4 +110,5 @@ class Ray:
                             Tcoef_carre *= TmB ** 2
                 elif wall.origin[0] > Px1 and wall.origin[0] > Px2:
                     break
+        print(Tcoef_carre)
         return Tcoef_carre  # NOTE: carré ou pas à voir

@@ -1,6 +1,9 @@
 import numpy as np
-import main
 import Display
+"""Ce fichier permet d'afficher les résultats calculé précédemment en choisissant plusieurs antennes
+à la fois
+"""
+
 dicoAntenna = {0: [100, 45],
                1: [36, 49],
                2: [170, 34],

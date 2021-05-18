@@ -1,14 +1,16 @@
 import copy
-
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.widgets import CheckButtons
-
 import Map
 
 somme = np.zeros((120, 210))
 displayAntenna = []
 listAntenna = [0]
+
+"""Affiche les résultat antenne par antenne
+La fonction displayDBM affiche la puissance en dBm 
+tandis que displayDebit affiche le débit"""
 
 
 def displayDPM(MAPstyle, results, dicoAntenna):
@@ -199,7 +201,6 @@ def displayDebit(MAPstyle, results, dicoAntenna):
         graphe.set_xlabel("axe x")
         graphe.set_ylabel("axe y")
         graphe.pcolor(X, Y, Z, cmap=plt.cm.turbo, shading='auto')
-        # plt.colorbar()
         for i in Map.getWalls(MAPstyle):  # affichage des murs
             x1 = [i.getOriginX(), i.getOriginX() + i.xDirection]
             y1 = [i.getOriginY(), i.getOriginY() + i.yDirection]

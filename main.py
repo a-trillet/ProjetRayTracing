@@ -16,6 +16,7 @@ a = 0
 
 
 def collect_results(result):
+    """collecte les résultat et les place dans une matrice"""
     global results
     global a
     for i in range(result[3]):
@@ -52,6 +53,8 @@ Z2brick = cmath.sqrt(mu0 / epsCbrick)
 # @guvectorize('complex64(float32, float32, int8, int8, int8, int8)', target='cuda')
 # @numba.cuda.jit('void(float32, float32, int8, int8, int8, int8)')
 def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
+    """calcule les coefficients de réflexion et retourne le champ électrique multiplié
+    par ce coefficient"""
     coef = 1
     alphaMconcrete = 1.1793519138628281
     alphaMbrick = 1.756512304000713
@@ -71,6 +74,7 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
                               (
                                   facEpsconcrete) * sinOi ** 2 * beta - betaMconcrete) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
+        print("Gamma m béton", gammaM)
         coef *= abs(gammaM) ** (2 * nbHc)
     if nbVc != 0:
         cosOi = dx / d
@@ -102,6 +106,7 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
                               (
                                   facEpsbrick) * sinOi ** 2 * beta - betaMbrick) / cosOt)  # ATTENTION ici pas de thickness car 2*thickness(=0.5) =1
         gammaM = gammaPerp * (1 - u) / (1 - gammaPerp ** 2 * u)
+        print("Gamma m brick:", gammaM)
         coef *= abs(gammaM) ** (2 * nbVb)
     E = coef / d ** 2
     #E=1
@@ -109,6 +114,7 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
 
 
 def calculatePower(x, y, wallsh, wallsv, precision, antenna):
+    """calcule la puissance en un point"""
     ray = Ray(antenna[0], antenna[1], x + precision // 2, y + precision // 2)
     rays = getRayImage(antenna[0], antenna[1], wallsh, wallsv, ray)
     power = 0
@@ -149,15 +155,17 @@ def calculatePower(x, y, wallsh, wallsv, precision, antenna):
         En_carre[i] *= r.getTcoef(wallsh, wallsv)
     for e in En_carre:
         power += e
+    print(En_carre)
     power *= factor * 60 * Gtx * Ptx
     return x, y, power, precision
 
 
 def main(antenna, i):
+    """calcule la puissance en tout point. Cette fonction utilise le multiprocessing"""
     init_time = datetime.now()
     pool = mp.Pool(8)
     global results
-    MAPstyle = 2  # 1(corner) or 2(MET)
+    MAPstyle = 1  # 1(corner) or 2(MET)
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
@@ -172,20 +180,11 @@ def main(antenna, i):
                                  callback=collect_results)
     pool.close()
     pool.join()
-    #Display.displayDPM(MAPstyle, results)
-    #Display.displayDebit(MAPstyle, results)
+
     end_time = datetime.now()
     print("Execution time: ", (end_time - init_time))
 
     w = str(i+39)
-    """dicoAntenna = {0: [100, 45],
-                   1: [36, 49],
-                   2: [170, 34],
-                   3: [40, 20],
-                   4: [100, 90],
-                   5: [79, 31],
-                   6: [170, 20]}
-    dp.displayDPM(1, [results], dicoAntenna)"""
     with open('antenna' + w, 'wb') as f:
         np.save(f, results)
     f.close()
@@ -193,7 +192,7 @@ def main(antenna, i):
 
 if __name__ == '__main__':
     # antennas = [[40, 20], [100, 90], [170, 20]]
-    antennas = [[125, 67], [100, 20]]
+    antennas = [[100, 45]]
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((120, 210))

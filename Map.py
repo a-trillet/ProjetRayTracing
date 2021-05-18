@@ -1,5 +1,6 @@
 from Wall import Wall
 
+"""Creer la map avec les différents murs et classe ces dernier"""
 
 def sortWallsH(wall):
     return wall.origin[1]

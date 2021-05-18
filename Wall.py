@@ -1,6 +1,7 @@
 import math
-#calculer un maximum de choses à la création du mur pour ne as devoir les calculer après
-#si il y a un problème a l'exécution, il faut que le programme s'arrete immédiatement pour pas perdre de temps
+"""Objet mur"""
+
+
 mu0 = 4 * math.pi * 10 ** (-7)
 class Wall:
     def __init__(self, xOrigin, yOrigin, xDirection, yDirection, material):
