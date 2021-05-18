@@ -1,9 +1,10 @@
+import math
+
 import Display
 import Map
 from Ray import *
 import temporaire as dp
 from ImageMethod import *
-import Display as dp
 import multiprocessing as mp
 import numpy as np
 from datetime import datetime
@@ -169,7 +170,6 @@ def main(antenna, i):
                 pool.apply_async(calculatePower,
                                  args=(x * precision, y * precision, wallsh, wallsv, precision, antenna),
                                  callback=collect_results)
-    #print("c'est : ", calculatePower(140, 40, wallsh, wallsv, precision, antenna))
     pool.close()
     pool.join()
     #Display.displayDPM(MAPstyle, results)
@@ -177,7 +177,7 @@ def main(antenna, i):
     end_time = datetime.now()
     print("Execution time: ", (end_time - init_time))
 
-    w = str(i+21)
+    w = str(i+39)
     """dicoAntenna = {0: [100, 45],
                    1: [36, 49],
                    2: [170, 34],
@@ -193,7 +193,7 @@ def main(antenna, i):
 
 if __name__ == '__main__':
     # antennas = [[40, 20], [100, 90], [170, 20]]
-    antennas = [[151, 50]]
+    antennas = [[125, 67], [100, 20]]
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((120, 210))
