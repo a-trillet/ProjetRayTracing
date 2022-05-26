@@ -1,14 +1,15 @@
 import copy
 import numpy as np
-
+from main import xMAP, yMAP, nbReflexion
 """Implémentation de la méthode des images(fonction getRayImage) ainsi que le 
 calcul du ou des point d'intersection entre le mur et le rayon (fonction findPoint)
 Note: Un rayon n'es créé que si il est valable"""
 
+
 def getRayImage(originX, originY, wallsh, wallsv, oldRay):
     rays = [oldRay]
     walls = [wallsv, wallsh]
-    for e in range(3):
+    for e in range(nbReflexion):
         for n in range(2):
             for wall in walls[n]:
                 PsSN = (originX - wall.getOriginX()) * wall.nX + (originY - wall.getOriginY()) * wall.nY
@@ -23,7 +24,7 @@ def getRayImage(originX, originY, wallsh, wallsv, oldRay):
                             ray.Ppoints.append(P1)
                             rays.append(ray)
                     elif e == 1 or e == 2:
-                        for j in range(2):
+                        for j in range(2):  #wall h and v
                             for w in walls[j]:
                                 if w != wall:
                                     if j == 0:
@@ -74,7 +75,8 @@ def getRayImage(originX, originY, wallsh, wallsv, oldRay):
                                                             imagePoints.remove(imagePoints[2])
                                         imagePoints.remove(imagePoints[1])
     for r in rays:
-        print(r.Ppoints)
+        e = 2
+        # print(r.Ppoints)
     return rays
 
 

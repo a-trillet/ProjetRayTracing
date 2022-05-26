@@ -1,4 +1,5 @@
 import math
+from main import xMAP, yMAP, nbReflexion
 """Objet mur"""
 
 
@@ -47,6 +48,10 @@ class Wall:
             self.mat = 2
             self.condctivity = 0.04
             self.relativePermitivity = 2.25
+        elif material == "buildingGrandPlace":
+            self.mat = 3
+            self.condctivity = 0.014
+            self.relativePermitivity = 4.5
         else:
             print("matériau inconnu")
 

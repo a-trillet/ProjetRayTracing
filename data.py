@@ -1,5 +1,7 @@
 import numpy as np
 import Display
+import math
+from main import xMAP, yMAP, nbReflexion
 """Ce fichier permet d'afficher les résultats calculé précédemment en choisissant plusieurs antennes
 à la fois
 """
@@ -46,12 +48,25 @@ dicoAntenna = {0: [100, 45],
                39: [125, 67],
                40: [100, 20]
                }
-nbAntenne = len(dicoAntenna)
+dicoAntennaGP = {0: [45, 95],
+                 1: [45, 95],
+                 2: [45, 95],
+                 3: [45, 95],
+                 4: [45, 95],
+                 5: [45, 95],
+                 6: [45, 95],
+                 7: [45, 95],
+                 8: [45, 95],
+                 9: [45, 95],
+                 10: [45, 95]}
+nbAntenne = len(dicoAntennaGP)
 
 allresult = []
 for i in range(nbAntenne):
-    with open("saves/antenna"+str(i), 'rb') as f:
+    with open("saves/GrandPlace"+str(i), 'rb') as f:
         allresult.append(np.load(f))
     f.close()
-Display.displayDPM(2, allresult, dicoAntenna)
-Display.displayDebit(2, allresult, dicoAntenna)
+
+print(10 * math.log10(allresult[10][5][90]*1000), " dBm in (90, 5)")
+Display.displayDPM(3, allresult, dicoAntennaGP)
+Display.displayDebit(3, allresult, dicoAntennaGP)

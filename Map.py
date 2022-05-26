@@ -1,5 +1,5 @@
 from Wall import Wall
-
+from main import xMAP, yMAP, nbReflexion
 """Creer la map avec les différents murs et classe ces dernier"""
 
 def sortWallsH(wall):
@@ -45,8 +45,7 @@ def getWalls(mapType):
                    |
     . (0,0)        |              
     """
-
-    if mapType == 2:
+    if mapType == 2 :
         # note, vecteurs choisis positif avec y vers le haut et x vers la droite (origine du plan MET en bas à doite)
         coordBrique = [[75, 10, 0, 5], [125, 10, 0, 5], [0, 30, 5, 0], [10, 30, 25, 0], [30, 15, 0, 15],
                        [35, 30, 0, 35], [37, 30, 31, 0], [70, 30, 25, 0], [75, 25, 0, 5], [95, 30, 0, 20],
@@ -57,14 +56,23 @@ def getWalls(mapType):
                        [140, 40, 0, 10], [140, 40, 20, 0], [160, 40, 0, 20], [152, 60, 8, 0], [140, 60, 10, 0],
                        [140, 60, 0, 5], [110, 65, 30, 0], [110, 58, 0, 7], [110, 50, 0, 6], [10, 75, 3, 0],
                        [15, 75, 20, 0], [35, 75, 0, 15], [165, 80, 0, 10]]
-        coordBeton = [[0, 0, 0, 65], [0, 65, 10, 0], [10, 65, 0, 35], [10, 100, 25, 0], [35, 90, 0, 10],
-                      [35, 90, 55, 0], [90, 90, 0, 5], [85, 95, 5, 0], [85, 95, 0, 15], [85, 110, 30, 0],
-                      [115, 95, 0, 15], [110, 95, 5, 0], [110, 90, 0, 5], [110, 90, 55, 0], [165, 90, 0, 10],
-                      [165, 100, 25, 0], [190, 65, 0, 35], [190, 65, 10, 0], [200, 0, 0, 65], [165, 0, 35, 0],
-                      [165, 0, 0, 10], [105, 10, 60, 0], [35, 10, 60, 0], [35, 0, 0, 10], [0, 0, 35, 0]]
+        coordBeton =  [[0, 0, 0, 65], [0, 65, 10, 0], [10, 65, 0, 35], [10, 100, 25, 0], [35, 90, 0, 10],
+                       [35, 90, 55, 0], [90, 90, 0, 5], [85, 95, 5, 0], [85, 95, 0, 15], [85, 110, 30, 0],
+                       [115, 95, 0, 15], [110, 95, 5, 0], [110, 90, 0, 5], [110, 90, 55, 0], [165, 90, 0, 10],
+                       [165, 100, 25, 0], [190, 65, 0, 35], [190, 65, 10, 0], [200, 0, 0, 65], [165, 0, 35, 0],
+                       [165, 0, 0, 10], [105, 10, 60, 0], [35, 10, 60, 0], [35, 0, 0, 10], [0, 0, 35, 0]]
         for i in range(len(coordBrique)):
             walls.append(Wall(coordBrique[i][0], coordBrique[i][1], coordBrique[i][2], coordBrique[i][3], "brick"))
         for i in range(len(coordBeton)):
             walls.append(Wall(coordBeton[i][0], coordBeton[i][1], coordBeton[i][2], coordBeton[i][3], "concrete"))
-
+    if mapType == 3:
+        """ coordonates of the walls of Grand Place. origine  is the left corner, 
+            positive y towards the top, positive x towards the left 
+             [0x, 0y, Ux, Uy]"""
+        coordWalls = [[0, 0, 130, 0], [0, 10, 40, 0], [40, 10, 0, 15], [0, 25, 40, 0], [0, 35, 40, 0],
+                      [40, 35, 0, 55], [0, 90, 40, 0], [0, 100, 80, 0], [80, 100, 0, 40], [90, 75, 0, 65],
+                      [90, 75, 40, 0], [90, 65, 40, 0], [90, 35, 40, 0], [90, 35, 0, 30], [90, 25, 40, 0],
+                      [90, 10, 0, 15], [90, 10, 40, 0]]
+        for i in range(len(coordWalls)):
+            walls.append(Wall(coordWalls[i][0], coordWalls[i][1], coordWalls[i][2], coordWalls[i][3], "brick"))
     return walls

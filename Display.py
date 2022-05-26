@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.widgets import CheckButtons
 import Map
-
-somme = np.zeros((120, 210))
+from main import xMAP, yMAP, nbReflexion
+somme = np.zeros((yMAP + 10, xMAP + 10))
 displayAntenna = []
 listAntenna = [0]
 
@@ -14,7 +14,7 @@ tandis que displayDebit affiche le débit"""
 
 
 def displayDPM(MAPstyle, results, dicoAntenna):
-    somme = np.zeros((120, 210))
+    somme = np.zeros((yMAP + 10, xMAP + 10))
     displayAntenna = []
     listAntenna = [0]
 
@@ -33,10 +33,8 @@ def displayDPM(MAPstyle, results, dicoAntenna):
             if result[i][j] > 10 ** (-6):
                 result[i][j] = 10 ** (-6)
 
-    a = 200
-    b = 110
-    x = np.linspace(-5, a + 4, a + 10)  # initialisation des axes et points
-    y = np.linspace(-5, b + 4, b + 10)
+    x = np.linspace(-4.5, xMAP + 4.5, xMAP + 10)  # initialisation des axes et points
+    y = np.linspace(-4.5, yMAP + 4.5, yMAP + 10)
     X, Y = np.meshgrid(x, y)
     fig = plt.figure(figsize=(19, 9))
     graphe = fig.add_subplot()
@@ -73,7 +71,7 @@ def displayDPM(MAPstyle, results, dicoAntenna):
 
     def set_visible(label):
         index = int(label.split(" ")[1])
-        somme = np.zeros((120, 210))
+        somme = np.zeros((yMAP + 10, xMAP + 10))
         if index not in listAntenna:
             listAntenna.append(index)
             displayAntenna.append(getDico()[index])
@@ -113,7 +111,7 @@ def displayDPM(MAPstyle, results, dicoAntenna):
 
 
 def displayDebit(MAPstyle, results, dicoAntenna):
-    somme = np.zeros((120, 210))
+    somme = np.zeros((yMAP + 10, xMAP + 10))
     displayAntenna = []
     listAntenna = [0]
 
@@ -134,10 +132,9 @@ def displayDebit(MAPstyle, results, dicoAntenna):
                 result[i][j] = 320
             else:
                 result[i][j] = 280 / 9 * dbm + 23320 / 9
-    a = 200
-    b = 110
-    x = np.linspace(-5, a + 4, a + 10)  # initialisation des axes et points
-    y = np.linspace(-5, b + 4, b + 10)
+
+    x = np.linspace(-4.5, xMAP + 3.5, xMAP + 10)  # initialisation des axes et points
+    y = np.linspace(-4.5, yMAP + 3.5, yMAP + 10)
     X, Y = np.meshgrid(x, y)
     fig = plt.figure(figsize=(19, 9))
     graphe = fig.add_subplot()
@@ -173,7 +170,7 @@ def displayDebit(MAPstyle, results, dicoAntenna):
 
     def set_visible(label):
         index = labels.index(label)
-        somme = np.zeros((120, 210))
+        somme = np.zeros((yMAP + 10, xMAP + 10))
         if index not in listAntenna:
             listAntenna.append(index)
             displayAntenna.append(getDico()[index])
