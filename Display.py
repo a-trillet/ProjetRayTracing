@@ -12,6 +12,59 @@ listAntenna = [0]
 La fonction displayDBM affiche la puissance en dBm 
 tandis que displayDebit affiche le débit"""
 
+def displayRays(MAPstyle, rays, antennaTx, antennaRx):
+    result = copy.deepcopy(somme)
+
+    x = np.linspace(-4.5, xMAP + 4.5, xMAP + 10)  # initialisation des axes et points
+    y = np.linspace(-4.5, yMAP + 4.5, yMAP + 10)
+    X, Y = np.meshgrid(x, y)
+    fig = plt.figure(figsize=(19, 9))
+    graphe = fig.add_subplot()
+    plt.title("Rays for validation")
+    plt.xlabel("axe x")
+    plt.ylabel("axe y")
+    Z = result
+    ax = graphe.pcolor(X, Y, Z, cmap=plt.cm.turbo, shading='nearest')
+    fig.colorbar(ax)
+
+    for i in Map.getWalls(MAPstyle):  # affichage des murs
+        x1 = [i.getOriginX(), i.getOriginX() + i.xDirection]
+        y1 = [i.getOriginY(), i.getOriginY() + i.yDirection]
+        if i.mat == 0:
+            graphe.plot(x1, y1, c="red", lw=3)
+        elif i.mat == 1:
+            graphe.plot(x1, y1, c="gray", lw=3)
+
+    for ray in rays:  # affichage des murs
+        if len(ray.Ppoints) == 0:
+            x1 = [ray.originX, ray.receiverX]
+            y1 = [ray.originY, ray.receiverY]
+            graphe.plot(x1, y1, c="gray", lw=2)
+
+        elif len(ray.Ppoints) == 1:
+            x1 = [ray.originX, ray.Ppoints[0][0]]
+            y1 = [ray.originY, ray.Ppoints[0][1]]
+            graphe.plot(x1, y1, c="gray", lw=2)
+            x1 = [ray.Ppoints[0][0], ray.receiverX]
+            y1 = [ray.Ppoints[0][1], ray.receiverX]
+            graphe.plot(x1, y1, c="gray", lw=2)
+        elif len(ray.Ppoints) == 2:
+            x1 = [ray.originX, ray.Ppoints[0][0]]
+            y1 = [ray.originY, ray.Ppoints[0][1]]
+            graphe.plot(x1, y1, c="gray", lw=2)
+            x1 = [ray.Ppoints[0][0], ray.Ppoints[1][0]]
+            y1 = [ray.Ppoints[0][1], ray.Ppoints[1][1]]
+            graphe.plot(x1, y1, c="gray", lw=2)
+            x1 = [ray.Ppoints[1][0], ray.receiverX]
+            y1 = [ray.Ppoints[1][1], ray.receiverX]
+            graphe.plot(x1, y1, c="gray", lw=2)
+
+    graphe.scatter(antennaTx[0], antennaTx[1], c='b')
+    graphe.scatter(antennaRx[0][0], antennaRx[0][1], c='b')
+    graphe.scatter(antennaRx[1][0], antennaRx[1][1], c='b')
+
+    plt.show()
+
 
 def displayDPM(MAPstyle, results, dicoAntenna):
     somme = np.zeros((yMAP + 10, xMAP + 10))

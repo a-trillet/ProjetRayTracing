@@ -59,14 +59,15 @@ dicoAntennaGP = {0: [45, 95],
                  8: [45, 95],
                  9: [45, 95],
                  10: [45, 95]}
-nbAntenne = len(dicoAntennaGP)
+dicoTest = {0: [20, 80]}
+nbAntenne = len(dicoTest)
 
 allresult = []
 for i in range(nbAntenne):
-    with open("saves/GrandPlace"+str(i), 'rb') as f:
+    with open("saves/LineTest"+str(i), 'rb') as f:
         allresult.append(np.load(f))
     f.close()
 
-print(10 * math.log10(allresult[10][5][90]*1000), " dBm in (90, 5)")
-Display.displayDPM(3, allresult, dicoAntennaGP)
-Display.displayDebit(3, allresult, dicoAntennaGP)
+# print(10 * math.log10(allresult[10][5][90]*1000), " dBm in (90, 5)")
+Display.displayDPM(4, allresult, dicoTest)
+Display.displayDebit(4, allresult, dicoTest)

@@ -32,7 +32,7 @@ def getWalls(mapType):
     walls = []
     if mapType == 1:
         walls.append(Wall(130, 30, 0, 50, "brick"))
-        walls.append(Wall(50, 80, 80, 0, "concrete"))
+        walls.append(Wall(50, 80, 80, 0, "brick"))
         #walls.append(Wall(0, 10, 10, 0, "brick"))
         #walls.append(Wall(100, -5, 0, 100, 'brick'))
     """ 
@@ -75,4 +75,8 @@ def getWalls(mapType):
                       [90, 10, 0, 15], [90, 10, 40, 0]]
         for i in range(len(coordWalls)):
             walls.append(Wall(coordWalls[i][0], coordWalls[i][1], coordWalls[i][2], coordWalls[i][3], "brick"))
+
+    if mapType == 4:
+        walls.append(Wall(60, 50, 0, 40, 'brick'))
+
     return walls

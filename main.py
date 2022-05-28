@@ -143,7 +143,8 @@ def calculatePower(x, y, wallsh, wallsv, antenna):
                         else:
                             nbWallsHb[i] += 1
                 VocTot += sqEIRP * heXY * reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i]) # reflexion Vov computation
-
+                if [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[0] or [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[1]:
+                    raysToPlot.append(r)
         else:
             if not blockingWall:  # add ground reflexion and compute En for LOS
                 finalrays.append(r)
@@ -151,6 +152,8 @@ def calculatePower(x, y, wallsh, wallsv, antenna):
                 VocTot += sqEIRP * heXY * reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i])  # computes LOS Voc
                 # add the ground reflexion
                 VocTot += r.getGroundReflexion(lam)
+                if [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[0] or [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[1]:
+                    raysToPlot.append(r)
 
             else:
                 listdiffrays = []
@@ -168,7 +171,8 @@ def calculatePower(x, y, wallsh, wallsv, antenna):
                     finalrays.append(elem)
                     dx[i], dy[i] = r.receiverX - r.originX, r.receiverY - r.originY
                     VocTot += elem.diffractionCoef(beta) * sqEIRP * heXY * reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i])
-
+                    if [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[0] or [math.floor(r.receiverX), math.floor(r.receiverY)]  == recv[1]:
+                        raysToPlot.append(elem)
         # transmission not considered
         # En_carre[i] *= r.getTcoef(wallsh, wallsv)
     """for e in Voc:
@@ -185,7 +189,7 @@ def main(antenna, i):
     init_time = datetime.now()
     pool = mp.Pool(8)
     global results
-    MAPstyle = 3  # 1(corner) or 2(MET) or 3 Grand Place
+    MAPstyle = 4  # 1(corner) or 2(MET) or 3 Grand Place
     walls = Map.getWalls(MAPstyle)
     wallsh = Map.getWallsH(walls)
     wallsv = Map.getWallsV(walls)
@@ -214,9 +218,15 @@ def main(antenna, i):
 
 if __name__ == '__main__':
     # antennas = [[40, 20], [100, 90], [170, 20]]
-    antennas = [[45, 95]]
+    antennas = [[20, 80]]# [[45, 95]]
+    recv = [[40, 60], [80, 80]]
+    recvreal = [[40+precision/2, 60+precision/2], [80+precision/2, 80+precision/2]]
+    raysToPlot = []
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((yMAP + 10, xMAP + 10))
         main(antennas[i], i)  # execute this only when run directly, not when imported!
         results = np.zeros((yMAP + 10, xMAP + 10))
+        Display.displayRays(4, raysToPlot, antennas[i], recv)
+
+

@@ -1,9 +1,9 @@
 import math
 from main import xMAP, yMAP, nbReflexion
 """Objet mur"""
-
-
 mu0 = 4 * math.pi * 10 ** (-7)
+
+
 class Wall:
     def __init__(self, xOrigin, yOrigin, xDirection, yDirection, material):
         self.length = math.sqrt(xDirection ** 2 + yDirection ** 2)
