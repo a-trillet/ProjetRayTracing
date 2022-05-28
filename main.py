@@ -13,8 +13,10 @@ import numpy as np
 from datetime import datetime
 
 results = np.zeros((yMAP + 10, xMAP + 10))
-
 a = 0
+recv = [[40, 60], [80, 80]]
+recvreal = [[40+precision/2, 60+precision/2], [80+precision/2, 80+precision/2]]
+raysToPlot = []
 
 
 def collect_results(result):
@@ -29,6 +31,9 @@ def collect_results(result):
     if result[0] // 2 != a:
         a = result[0] // 2
         #print(a, '%')
+    if [result[0], result[1]] == recv[0] or [result[0], result[1]] == recv[1]:
+        for thing in result[3]:
+            raysToPlot.append(thing)
 
 
 permRel = 4.5
@@ -60,6 +65,8 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
     """calcule les coefficients de réflexion et retourne le phaseur du champ électrique multiplié
     par ce coefficient"""
     coef = 1
+    cosOi = 0
+    sinOi = 0
     # alphaMconcrete = 1.1793519138628281
     # alphaMbrick = 1.756512304000713
     # beta = 565.878155926954
@@ -95,11 +102,14 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
         GammaPerp = (cosOi - temp) / (cosOi + temp)
         coef *= abs(GammaPerp) ** nbVb
     E = coef / d * cmath.exp(complex(0, -beta * d))   #En phaser for this ray
+
+    print("cosOi = ", cosOi, " and sinOi = ", sinOi)
     return E
 
 
 def calculatePower(x, y, wallsh, wallsv, antenna):
     """calcule la puissance en un point"""
+    global raysToPlot
     dx, dy = x + precision / 2 - antenna[0], y + precision / 2 - antenna[1]
     if math.sqrt(dx ** 2 + dy ** 2) < 10:
         return x, y, 0, precision                      #only receivers further than 10 meters are computed
@@ -143,8 +153,7 @@ def calculatePower(x, y, wallsh, wallsv, antenna):
                         else:
                             nbWallsHb[i] += 1
                 VocTot += sqEIRP * heXY * reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i]) # reflexion Vov computation
-                if [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[0] or [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[1]:
-                    raysToPlot.append(r)
+
         else:
             if not blockingWall:  # add ground reflexion and compute En for LOS
                 finalrays.append(r)
@@ -152,8 +161,7 @@ def calculatePower(x, y, wallsh, wallsv, antenna):
                 VocTot += sqEIRP * heXY * reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i])  # computes LOS Voc
                 # add the ground reflexion
                 VocTot += r.getGroundReflexion(lam)
-                if [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[0] or [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[1]:
-                    raysToPlot.append(r)
+
 
             else:
                 listdiffrays = []
@@ -171,23 +179,21 @@ def calculatePower(x, y, wallsh, wallsv, antenna):
                     finalrays.append(elem)
                     dx[i], dy[i] = r.receiverX - r.originX, r.receiverY - r.originY
                     VocTot += elem.diffractionCoef(beta) * sqEIRP * heXY * reflexionPower(dx[i], dy[i], nbWallsHc[i], nbWallsVc[i], nbWallsHb[i], nbWallsVb[i])
-                    if [math.floor(r.receiverX), math.floor(r.receiverY)] == recv[0] or [math.floor(r.receiverX), math.floor(r.receiverY)]  == recv[1]:
-                        raysToPlot.append(elem)
+
         # transmission not considered
         # En_carre[i] *= r.getTcoef(wallsh, wallsv)
     """for e in Voc:
         VocTot += e"""
     power = abs(VocTot) ** 2 / (8 * Ra)
-
-    return x, y, power
+    return x, y, power, finalrays
 
 
 def main(antenna, i):
     """calcule la puissance en tout point. Cette fonction utilise le multiprocessing"""
 
-
     init_time = datetime.now()
     pool = mp.Pool(8)
+    global raysToPlot
     global results
     MAPstyle = 4  # 1(corner) or 2(MET) or 3 Grand Place
     walls = Map.getWalls(MAPstyle)
@@ -214,19 +220,21 @@ def main(antenna, i):
     with open('GrandPlace' + w, 'wb') as f:
         np.save(f, results)
     f.close()
+    print(len(raysToPlot))
+    return raysToPlot
 
 
 if __name__ == '__main__':
     # antennas = [[40, 20], [100, 90], [170, 20]]
     antennas = [[20, 80]]# [[45, 95]]
-    recv = [[40, 60], [80, 80]]
-    recvreal = [[40+precision/2, 60+precision/2], [80+precision/2, 80+precision/2]]
-    raysToPlot = []
+
     # freeze_support() here if program needs to be frozen
     for i in range(len(antennas)):
         results = np.zeros((yMAP + 10, xMAP + 10))
-        main(antennas[i], i)  # execute this only when run directly, not when imported!
+        raysToPlot = main(antennas[i], i)  # execute this only when run directly, not when imported!
+        print("nb of rays to plot: ", len(raysToPlot))
+        Display.displayRays(4, raysToPlot, antennas[i], recvreal, results)
         results = np.zeros((yMAP + 10, xMAP + 10))
-        Display.displayRays(4, raysToPlot, antennas[i], recv)
+
 
 

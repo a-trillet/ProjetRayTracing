@@ -12,9 +12,15 @@ listAntenna = [0]
 La fonction displayDBM affiche la puissance en dBm 
 tandis que displayDebit affiche le débit"""
 
-def displayRays(MAPstyle, rays, antennaTx, antennaRx):
-    result = copy.deepcopy(somme)
 
+def displayRays(MAPstyle, rays, antennaTx, antennaRx, result):
+
+    for i in range(len(result)):
+        for j in range(len(result[0])):
+            if result[i][j] < 10 ** (-14):
+                result[i][j] = 10 ** (-14)
+            if result[i][j] > 10 ** (-6):
+                result[i][j] = 10 ** (-6)
     x = np.linspace(-4.5, xMAP + 4.5, xMAP + 10)  # initialisation des axes et points
     y = np.linspace(-4.5, yMAP + 4.5, yMAP + 10)
     X, Y = np.meshgrid(x, y)
@@ -23,7 +29,7 @@ def displayRays(MAPstyle, rays, antennaTx, antennaRx):
     plt.title("Rays for validation")
     plt.xlabel("axe x")
     plt.ylabel("axe y")
-    Z = result
+    Z = 10 * np.log10(1000 * result)
     ax = graphe.pcolor(X, Y, Z, cmap=plt.cm.turbo, shading='nearest')
     fig.colorbar(ax)
 
@@ -31,37 +37,37 @@ def displayRays(MAPstyle, rays, antennaTx, antennaRx):
         x1 = [i.getOriginX(), i.getOriginX() + i.xDirection]
         y1 = [i.getOriginY(), i.getOriginY() + i.yDirection]
         if i.mat == 0:
-            graphe.plot(x1, y1, c="red", lw=3)
+            graphe.plot(x1, y1, c="gray", lw=3)
         elif i.mat == 1:
             graphe.plot(x1, y1, c="gray", lw=3)
 
-    for ray in rays:  # affichage des murs
+    for ray in rays:
         if len(ray.Ppoints) == 0:
             x1 = [ray.originX, ray.receiverX]
             y1 = [ray.originY, ray.receiverY]
-            graphe.plot(x1, y1, c="gray", lw=2)
+            graphe.plot(x1, y1, c="white", lw=2)
 
         elif len(ray.Ppoints) == 1:
             x1 = [ray.originX, ray.Ppoints[0][0]]
             y1 = [ray.originY, ray.Ppoints[0][1]]
-            graphe.plot(x1, y1, c="gray", lw=2)
+            graphe.plot(x1, y1, c="white", lw=2)
             x1 = [ray.Ppoints[0][0], ray.receiverX]
-            y1 = [ray.Ppoints[0][1], ray.receiverX]
-            graphe.plot(x1, y1, c="gray", lw=2)
+            y1 = [ray.Ppoints[0][1], ray.receiverY]
+            graphe.plot(x1, y1, c="white", lw=2)
         elif len(ray.Ppoints) == 2:
             x1 = [ray.originX, ray.Ppoints[0][0]]
             y1 = [ray.originY, ray.Ppoints[0][1]]
-            graphe.plot(x1, y1, c="gray", lw=2)
+            graphe.plot(x1, y1, c="white", lw=2)
             x1 = [ray.Ppoints[0][0], ray.Ppoints[1][0]]
             y1 = [ray.Ppoints[0][1], ray.Ppoints[1][1]]
-            graphe.plot(x1, y1, c="gray", lw=2)
+            graphe.plot(x1, y1, c="white", lw=2)
             x1 = [ray.Ppoints[1][0], ray.receiverX]
-            y1 = [ray.Ppoints[1][1], ray.receiverX]
-            graphe.plot(x1, y1, c="gray", lw=2)
+            y1 = [ray.Ppoints[1][1], ray.receiverY]
+            graphe.plot(x1, y1, c="white", lw=2)
 
-    graphe.scatter(antennaTx[0], antennaTx[1], c='b')
-    graphe.scatter(antennaRx[0][0], antennaRx[0][1], c='b')
-    graphe.scatter(antennaRx[1][0], antennaRx[1][1], c='b')
+    graphe.scatter(antennaTx[0], antennaTx[1], c='white', lw = 3)
+    graphe.scatter(antennaRx[0][0], antennaRx[0][1], c='white', lw = 3)
+    graphe.scatter(antennaRx[1][0], antennaRx[1][1], c='white', lw = 3)
 
     plt.show()
 
@@ -102,11 +108,11 @@ def displayDPM(MAPstyle, results, dicoAntenna):
         x1 = [i.getOriginX(), i.getOriginX() + i.xDirection]
         y1 = [i.getOriginY(), i.getOriginY() + i.yDirection]
         if i.mat == 0:
-            graphe.plot(x1, y1, c="red", lw=3)
+            graphe.plot(x1, y1, c="gray", lw=3)
         elif i.mat == 1:
             graphe.plot(x1, y1, c="gray", lw=3)
     for antenna in displayAntenna:
-        graphe.scatter(antenna[0], antenna[1], c='b')
+        graphe.scatter(antenna[0], antenna[1], c='black')
 
     # Make checkbuttons with all plotted lines with correct visibility
     # checkbuton widget
@@ -152,7 +158,7 @@ def displayDPM(MAPstyle, results, dicoAntenna):
             x1 = [i.getOriginX(), i.getOriginX() + i.xDirection]
             y1 = [i.getOriginY(), i.getOriginY() + i.yDirection]
             if i.mat == 0:
-                graphe.plot(x1, y1, c="red", lw=3)
+                graphe.plot(x1, y1, c="gray", lw=3)
             elif i.mat == 1:
                 graphe.plot(x1, y1, c="gray", lw=3)
         for antenna in displayAntenna:
@@ -201,7 +207,7 @@ def displayDebit(MAPstyle, results, dicoAntenna):
         x1 = [i.getOriginX(), i.getOriginX() + i.xDirection]
         y1 = [i.getOriginY(), i.getOriginY() + i.yDirection]
         if i.mat == 0:
-            graphe.plot(x1, y1, c="red", lw=3)
+            graphe.plot(x1, y1, c="gray", lw=3)
         elif i.mat == 1:
             graphe.plot(x1, y1, c="gray", lw=3)
     for antenna in displayAntenna:
@@ -255,7 +261,7 @@ def displayDebit(MAPstyle, results, dicoAntenna):
             x1 = [i.getOriginX(), i.getOriginX() + i.xDirection]
             y1 = [i.getOriginY(), i.getOriginY() + i.yDirection]
             if i.mat == 0:
-                graphe.plot(x1, y1, c="red", lw=3)
+                graphe.plot(x1, y1, c="gray", lw=3)
             elif i.mat == 1:
                 graphe.plot(x1, y1, c="gray", lw=3)
         for antenna in displayAntenna:
