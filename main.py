@@ -36,7 +36,7 @@ def collect_results(result):
             raysToPlot.append(thing)
 
 
-permRel = 4.5
+permRel = 4
 freq = 26e9
 omega = 2 * math.pi * freq
 c = 299792458
@@ -77,33 +77,40 @@ def reflexionPower(dx, dy, nbHc, nbVc, nbHb, nbVb):
     # Z2brick = (175.6508624825743 + 0.2542138351688341j)
     d = math.sqrt(dx ** 2 + dy ** 2)
     if nbHc != 0:
-        cosOi = -dy / d
-        sinOi = dx / d
+        sinOi = abs(dx) / d
+        Oi = math.asin(sinOi)
+        cosOi = math.cos(Oi)
         temp = math.sqrt(1 - (sinOi ** 2) / permRel) * math.sqrt(permRel)
         GammaPerp = (cosOi - temp) / (cosOi + temp)
-        coef *= abs(GammaPerp) ** nbHc
+        #print(GammaPerp)
+        coef *= GammaPerp ** nbHc
     if nbVc != 0:
-        cosOi = dx / d
-        sinOi = dy / d
+        sinOi = abs(dy) / d
+        Oi = math.asin(sinOi)
+        cosOi = math.cos(Oi)
         temp = math.sqrt(1 - (sinOi ** 2) / permRel) * math.sqrt(permRel)
         GammaPerp = (cosOi - temp) / (cosOi + temp)
-        coef *= abs(GammaPerp) ** nbVc
+        coef *= GammaPerp ** nbVc
     if nbHb != 0:
-        cosOi = -dy / d
-        sinOi = dx / d
+
+        sinOi = abs(dx) / d
+        Oi = math.asin(sinOi)
+        cosOi = math.cos(Oi)
         temp = math.sqrt(1 - (sinOi ** 2) / permRel) * math.sqrt(permRel)
         GammaPerp = (cosOi - temp) / (cosOi + temp)
-        coef *= abs(GammaPerp) ** nbHb
+        coef *= GammaPerp ** nbHb
 
     if nbVb != 0:
-        cosOi = dx / d
-        sinOi = dy / d
+        sinOi = abs(dy) / d
+        Oi = math.asin(sinOi)
+        cosOi = math.cos(Oi)
         temp = math.sqrt(1 - (sinOi ** 2) / permRel) * math.sqrt(permRel)
         GammaPerp = (cosOi - temp) / (cosOi + temp)
-        coef *= abs(GammaPerp) ** nbVb
+        #print(GammaPerp)
+        coef *= GammaPerp ** nbVb
     E = coef / d * cmath.exp(complex(0, -beta * d))   #En phaser for this ray
 
-    print("cosOi = ", cosOi, " and sinOi = ", sinOi)
+    #print("cosOi = ", cosOi, " and sinOi = ", sinOi)
     return E
 
 
@@ -163,6 +170,7 @@ def calculatePower(x, y, wallsh, wallsv, antenna):
                 VocTot += r.getGroundReflexion(lam)
 
 
+
             else:
                 listdiffrays = []
                 usedCorner = []
@@ -185,6 +193,7 @@ def calculatePower(x, y, wallsh, wallsv, antenna):
     """for e in Voc:
         VocTot += e"""
     power = abs(VocTot) ** 2 / (8 * Ra)
+
     return x, y, power, finalrays
 
 
