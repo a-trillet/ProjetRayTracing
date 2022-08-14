@@ -1,4 +1,6 @@
 import cmath
+import math
+
 from Wall import *
 from main import xMAP, yMAP, nbReflexion
 """objet Rayon, et une fonction qui calcule les coefficien de transmission"""
@@ -17,7 +19,19 @@ class Ray:
 
         self.Ppoints = []
 
-    def getTcoef(self, wallsH, wallsV):
+    def getLength(self):
+        length = 0
+        if len(self.imagePoints) == 0:
+            if len(self.Ppoints) == 0:
+                length = math.sqrt((self.receiverX - self.originX) ** 2 + (self.receiverY - self.originY) ** 2)
+            else:
+                length = math.sqrt((self.Ppoints[0][0] - self.originX) ** 2 + (self.Ppoints[0][1] - self.originY) ** 2)
+                length += math.sqrt((self.Ppoints[0][0] - self.receiverX) ** 2 + (self.Ppoints[0][1] - self.receiverY) ** 2)
+        else:
+            length = math.sqrt((self.imagePoints[-1][0] - self.receiverX) ** 2 + (self.imagePoints[-1][1] - self.receiverY) ** 2)
+        return length
+
+    def getTcoef(self, wallsH, wallsV):  #transmition
         """ transmission coef squared for each wall transmitted through"""
         facEpsbrick = 0.4662524041201569
         facEpsconcrete = 0.4472135954999579
@@ -185,17 +199,17 @@ class Ray:
         height = 2
         dXY2 = (self.receiverX-self.originX)**2 + (self.receiverY-self.originY)**2
         d = math.sqrt((2*height)**2 + dXY2)
-        cosOi = 2*height/d
-        sinOi = math.sqrt(dXY2) / d
+        Og = math.atan(d/(2*height))    # angle with the ground
+        Oi = math.pi - Og               # angle with the antennas
         permRel = 4   # relative permittivity of the ground is set to 4.5 as for the buildings
-        Gtx = 1.7 * sinOi ** 3
+        Gtx = 1.7 * math.sin(Oi) ** 3
         Ptx = 0.1471
 
-        he = -lam / math.pi * math.cos(math.pi/2 * cosOi) / sinOi**2
+        he = -lam / math.pi * math.cos(math.pi/2 * math.cos(Oi)) / math.sin(Oi)**2
 
-        temp = math.sqrt(1 - (sinOi**2)/permRel) / math.sqrt(permRel)
-        GammaPar = (cosOi - temp) / (cosOi + temp)
+        temp = math.sqrt(1 - (math.sin(Og)**2)/permRel) / math.sqrt(permRel)
+        GammaPar = (math.cos(Og) - temp) / (math.cos(Og) + temp)
 
         beta = 2 * math.pi / lam
         Voc = GammaPar * he * math.sqrt(60 * Gtx * Ptx) * cmath.exp(complex(0, -beta * d)) / d
-        return Voc
+        return Voc, d

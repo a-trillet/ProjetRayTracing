@@ -1,0 +1,5 @@
+This code works in two parts:
+main.py :   constains all the mains that can be commented easily in the end of the file.
+            You might need to have more than one core to run this one as it is using multiprocessing
+data.py :   interface that uses precomputed results to allow the user to experience with placing several antennas himself
+            You will need all the saves files

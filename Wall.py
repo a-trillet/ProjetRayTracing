@@ -22,7 +22,6 @@ class Wall:
 
         self.setProperty(material)
 
-
     def getOriginX(self):
         return self.origin[0]
 
@@ -51,7 +50,11 @@ class Wall:
         elif material == "buildingGrandPlace":
             self.mat = 3
             self.condctivity = 0.014
-            self.relativePermitivity = 4.5
+            self.relativePermitivity = 4
+        elif material == "metal":
+            self.mat = 4
+            self.condctivity = 1000000
+            self.relativePermitivity = 1000000
         else:
             print("matériau inconnu")
 

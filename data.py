@@ -48,26 +48,27 @@ dicoAntenna = {0: [100, 45],
                39: [125, 67],
                40: [100, 20]
                }
-dicoAntennaGP = {0: [45, 95],
-                 1: [45, 95],
-                 2: [45, 95],
-                 3: [45, 95],
-                 4: [45, 95],
-                 5: [45, 95],
-                 6: [45, 95],
-                 7: [45, 95],
-                 8: [45, 95],
-                 9: [45, 95],
-                 10: [45, 95]}
+dicoAntennaGP = {0: [45, 100-0.2],
+                 1: [45, 100-0.2],
+                 2: [45, 100-0.2],
+                 3: [65, 0 + 0.2],  # d = 0.97 lam
+                 4: [45, 100-0.2],  # d = 5/4  lam
+                 5: [60, 100-0.2],  # d = 1/4 lam
+                 6: [60, 100-0.2],  # d = 3/4 lam
+                 7: [60, 100-0.2],  # d = 2/4 lam
+                 8: [60, 100-0.2],  # d = 4/4 lam
+                 9: [60, 100-0.2],  # d = 5/4 lam
+                 10: [60, 100-0.2],  # d = 6/4 lam
+                 }
 dicoTest = {0: [20, 80]}
-nbAntenne = len(dicoTest)
+nbAntenne = len(dicoAntennaGP)
 
 allresult = []
 for i in range(nbAntenne):
-    with open("saves/LineTest"+str(i), 'rb') as f:
+    with open("saves/GrandPlace"+str(i), 'rb') as f:
         allresult.append(np.load(f))
     f.close()
 
 # print(10 * math.log10(allresult[10][5][90]*1000), " dBm in (90, 5)")
-Display.displayDPM(4, allresult, dicoTest)
-Display.displayDebit(4, allresult, dicoTest)
+Display.displayDPM(3, allresult, dicoAntennaGP)
+Display.displayDebit(3, allresult, dicoAntennaGP)
